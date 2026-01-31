@@ -10,21 +10,21 @@ export interface Question {
   axis: 'intervention' | 'perception' | 'judgment' | 'engagement';
   text: string;
   optionA: string; // スコア1（A寄り）の選択肢
-  optionB: string; // スコア5（B寄り）の選択肢
+  optionB: string; // スコア6（B寄り）の選択肢
 }
 
 // 回答の型
 export interface Answer {
   questionId: number;
-  score: number; // 1-5
+  score: number; // 1-6（6段階）
 }
 
 // 軸のスコア
 export interface AxisScores {
-  intervention: number; // 8-40: 低いほど触発型、高いほど見守型
-  perception: number;   // 8-40: 低いほど観察型、高いほど洞察型
-  judgment: number;     // 8-40: 低いほど目的型、高いほど関係型
-  engagement: number;   // 8-40: 低いほど設計型、高いほど即興型
+  intervention: number; // 8-48: 低いほど触発型、高いほど見守型
+  perception: number;   // 8-48: 低いほど観察型、高いほど洞察型
+  judgment: number;     // 8-48: 低いほど目的型、高いほど関係型
+  engagement: number;   // 8-48: 低いほど設計型、高いほど即興型
 }
 
 // 傾向の型
@@ -42,6 +42,7 @@ export interface FacilitatorType {
   description: string;
   detailedDescription: string[]; // 複数段落の詳細説明
   goodScenes: string[];
+  influenceDescription: string; // ファシリテーターとしての影響力（場・参加者への影響を1文で・3-B）
   // 組み合わせ条件
   intervention: InterventionStyle;
   perception: PerceptionTarget;

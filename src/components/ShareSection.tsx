@@ -10,8 +10,9 @@ export function ShareSection({ result, resultRef }: ShareSectionProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [shareImageUrl, setShareImageUrl] = useState<string | null>(null);
 
-  // シェアテキストを生成
-  const shareText = `ファシリスタイル診断の結果、私は「${result.type.name}」タイプでした！ ${result.type.catchcopy}`;
+  // シェアテキストを生成（** は除去）
+  const plainCatchcopy = result.type.catchcopy.replace(/\*\*/g, '');
+  const shareText = `ファシリスタイル診断の結果、私は「${result.type.name}」タイプでした！ ${plainCatchcopy}`;
   const shareUrl = typeof window !== 'undefined' ? window.location.origin : '';
 
   // 画像を生成

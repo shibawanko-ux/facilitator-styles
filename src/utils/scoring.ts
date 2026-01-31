@@ -23,11 +23,10 @@ export function calculateAxisScores(answers: Answer[]): AxisScores {
   return scores;
 }
 
-// スコアから傾向を判定（24を中央値として）
-// 8-40の範囲、中央値は24
-// 8-19: 強くA寄り, 20-23: ややA寄り, 24: 中間, 25-28: ややB寄り, 29-40: 強くB寄り
+// スコアから傾向を判定（中央28・6段階）
+// 8-48の範囲、中央は28。27以下: A寄り、28以上: B寄り
 export function getTendencyType(score: number, axis: string): string {
-  if (score <= 23) {
+  if (score <= 27) {
     // A寄り
     switch (axis) {
       case 'intervention': return 'trigger';
@@ -50,10 +49,9 @@ export function getTendencyType(score: number, axis: string): string {
 
 // 傾向の強さを取得（パーセンテージ）
 export function getTendencyStrength(score: number): { percentage: number; label: string } {
-  // 8-40のスコアを0-100%に変換
-  // 中央24からの距離を計算
-  const distance = Math.abs(score - 24);
-  const maxDistance = 16; // 8から24、または40から24
+  // 8-48のスコア、中央28からの距離を0-100%に変換
+  const distance = Math.abs(score - 28);
+  const maxDistance = 20; // 8から28、または48から28
   const percentage = Math.round((distance / maxDistance) * 100);
   
   if (distance <= 3) {

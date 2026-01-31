@@ -21,15 +21,14 @@ interface AxisBarProps {
 }
 
 function AxisBar({ axisName, score, leftLabel, rightLabel, tendency, colorClass }: AxisBarProps) {
-  // スコア8-40を0-100%に変換
-  const percentage = ((score - 8) / 32) * 100;
+  // スコア8-48を0-100%に変換（6段階）。0%=左端、50%=中央、100%=右端
+  const percentage = ((score - 8) / 40) * 100;
   const strength = getTendencyStrength(score);
   
-  // 傾向の方向（左か右か）
-  const isLeftTendency = score <= 24;
-  
-  // パーセンテージ表示用（中央からの偏り）
-  const deviationPercentage = Math.abs(50 - percentage);
+  // 傾向の方向（左か右か）。中央28でA/Bを分ける
+  const isLeftTendency = score <= 27;
+  // 表示用％：どちら側に何％寄っているか（2-D：目立たせる）
+  const displayPercent = isLeftTendency ? Math.round(100 - percentage) : Math.round(percentage);
   
   const colorClasses: Record<string, { fill: string; text: string; lightBg: string }> = {
     primary: {
@@ -58,51 +57,16 @@ function AxisBar({ axisName, score, leftLabel, rightLabel, tendency, colorClass 
 
   return (
     <div className={`p-5 rounded-xl ${colors.lightBg} mb-4 last:mb-0 border border-gray-100`}>
-      {/* 軸名とタイプ */}
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <span className="text-xs text-gray-400 uppercase tracking-wider">{axisName}</span>
-          <div className="flex items-center gap-2 mt-1">
-            <span className={`font-bold text-lg ${colors.text}`}>{tendency.label}</span>
-            <span className="text-xs px-2 py-0.5 bg-white rounded-full text-gray-500 border border-gray-100">
-              {Math.round(deviationPercentage * 2)}%
-            </span>
-          </div>
-        </div>
-        <span className="text-xs text-gray-400 bg-white px-3 py-1 rounded-full border border-gray-100">
-          {strength.label}
-        </span>
-      </div>
-      
-      {/* スコアバー */}
-      <div className="relative mb-3">
-        {/* 背景バー */}
-        <div className="h-2 rounded-full bg-white border border-gray-100">
-          {/* 中央線 */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-200 z-10" />
-          
-          {/* カラーバー（傾向の方向に伸びる） */}
-          {isLeftTendency ? (
-            <div
-              className={`absolute top-0 bottom-0 right-1/2 rounded-l-full ${colors.fill}`}
-              style={{ width: `${50 - percentage}%` }}
-            />
-          ) : (
-            <div
-              className={`absolute top-0 bottom-0 left-1/2 rounded-r-full ${colors.fill}`}
-              style={{ width: `${percentage - 50}%` }}
-            />
-          )}
-          
-          {/* スコアインジケーター */}
+      {/* 1. スコアバーを上に（添付画像準拠：バー→タイトル→リード文） */}
+      <div className="relative mb-2">
+        <div className="h-2.5 rounded-full bg-gray-200 border border-gray-100 w-full relative">
+          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-300 z-10 -translate-x-px" />
           <div
-            className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full ${colors.fill} z-20 border-2 border-white transition-all duration-500`}
-            style={{ left: `calc(${percentage}% - 8px)` }}
+            className={`absolute top-1/2 -translate-y-1/2 w-5 h-5 rounded-full ${colors.fill} z-20 border-2 border-white shadow transition-all duration-500`}
+            style={{ left: `calc(${percentage}% - 10px)` }}
           />
         </div>
-        
-        {/* ラベル */}
-        <div className="flex justify-between mt-2 text-xs">
+        <div className="flex justify-between mt-1.5 text-xs">
           <span className={`font-medium ${!isLeftTendency ? 'text-gray-300' : colors.text}`}>
             {leftLabel}
           </span>
@@ -111,9 +75,21 @@ function AxisBar({ axisName, score, leftLabel, rightLabel, tendency, colorClass 
           </span>
         </div>
       </div>
-      
-      {/* 簡易説明 */}
-      <p className="text-xs text-gray-500 leading-relaxed">
+
+      {/* 2. 直下にタイトル行（軸名: XX% 〇〇型）・余白を詰める */}
+      <div className="flex justify-between items-center mb-1">
+        <p className="text-base font-semibold text-gray-800 leading-tight">
+          <span className="text-gray-600">{axisName}: </span>
+          <span className={`font-bold text-lg ${colors.text}`}>{displayPercent}%</span>
+          <span className={`font-semibold ml-1 ${colors.text}`}>{tendency.label}</span>
+        </p>
+        <span className="text-xs text-gray-400 bg-white px-2.5 py-0.5 rounded-full border border-gray-100 shrink-0">
+          {strength.label}
+        </span>
+      </div>
+
+      {/* 3. 直下にリード文（タイトルと近づけて一まとまりに） */}
+      <p className="text-sm text-gray-600 leading-relaxed">
         {tendency.description}
       </p>
     </div>

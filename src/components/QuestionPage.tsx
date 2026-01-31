@@ -14,9 +14,10 @@ interface QuestionPageProps {
 const scaleLabels = [
   { score: 1, label: 'とてもAに近い' },
   { score: 2, label: 'ややAに近い' },
-  { score: 3, label: 'どちらとも言えない' },
-  { score: 4, label: 'ややBに近い' },
-  { score: 5, label: 'とてもBに近い' },
+  { score: 3, label: 'どちらかといえばA' },
+  { score: 4, label: 'どちらかといえばB' },
+  { score: 5, label: 'ややBに近い' },
+  { score: 6, label: 'とてもBに近い' },
 ];
 
 export function QuestionPage({
@@ -77,31 +78,59 @@ export function QuestionPage({
             </div>
           </div>
 
-          {/* 5段階スケール */}
-          <div className="flex justify-center gap-3 md:gap-4 mb-6">
-            {scaleLabels.map(({ score }) => (
-              <button
-                key={score}
-                onClick={() => handleSelect(score)}
-                className={`
-                  w-12 h-12 md:w-14 md:h-14 rounded-full font-semibold text-lg
-                  transition-all duration-300 transform
-                  ${currentAnswer?.score === score
-                    ? 'bg-primary-700 text-white scale-110'
-                    : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:scale-105'
-                  }
-                `}
-              >
-                {score}
-              </button>
-            ))}
-          </div>
-
-          {/* スケールラベル */}
-          <div className="flex justify-between text-xs text-gray-400 px-2">
-            <span>とてもA</span>
-            <span>どちらとも</span>
-            <span>とてもB</span>
+          {/* 6段階スケール（3と4の間に境界線、線の下は「←｜→」のみ） */}
+          <div className="flex flex-col items-center w-full">
+            <div className="flex items-center justify-center gap-2 md:gap-3 mb-2">
+              {/* A側: 1〜3 */}
+              <div className="flex gap-2 md:gap-3">
+                {scaleLabels.filter((s) => s.score <= 3).map(({ score }) => (
+                  <button
+                    key={score}
+                    onClick={() => handleSelect(score)}
+                    className={`
+                      w-11 h-11 md:w-12 md:h-12 rounded-full font-semibold text-base
+                      transition-all duration-300 transform
+                      ${currentAnswer?.score === score
+                        ? 'bg-primary-700 text-white scale-110'
+                        : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:scale-105'
+                      }
+                    `}
+                  >
+                    {score}
+                  </button>
+                ))}
+              </div>
+              {/* 境界線（3と4の間） */}
+              <div className="w-px h-12 md:h-14 bg-gray-200 mx-1 shrink-0" aria-hidden="true" />
+              {/* B側: 4〜6 */}
+              <div className="flex gap-2 md:gap-3">
+                {scaleLabels.filter((s) => s.score >= 4).map(({ score }) => (
+                  <button
+                    key={score}
+                    onClick={() => handleSelect(score)}
+                    className={`
+                      w-11 h-11 md:w-12 md:h-12 rounded-full font-semibold text-base
+                      transition-all duration-300 transform
+                      ${currentAnswer?.score === score
+                        ? 'bg-primary-700 text-white scale-110'
+                        : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:scale-105'
+                      }
+                    `}
+                  >
+                    {score}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {/* 線の下：記号のみ（←＝A側・→＝B側・｜＝境目） */}
+            <p className="text-base text-gray-400 mb-3 tracking-wider" aria-hidden="true">
+              ←｜→
+            </p>
+            {/* スケールラベル（左寄せ・右寄せで中央に見えないようにする） */}
+            <div className="flex justify-between w-full text-xs text-gray-400 px-1">
+              <span className="text-left">とてもA</span>
+              <span className="text-right">とてもB</span>
+            </div>
           </div>
         </div>
 
