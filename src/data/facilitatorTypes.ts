@@ -357,3 +357,8 @@ export function determineType(
       type.engagement === engagement
   );
 }
+
+/** IDでタイプを取得（TOP・相性セクションから詳細モーダル表示用） */
+export function getFacilitatorTypeById(id: string): FacilitatorType | undefined {
+  return facilitatorTypes.find((t) => t.id === id);
+}

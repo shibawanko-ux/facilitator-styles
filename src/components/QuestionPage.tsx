@@ -164,6 +164,18 @@ export function QuestionPage({
           </button>
         </div>
       </div>
+
+      {/* フッター */}
+      <div className="mt-auto px-6 py-6 text-center border-t border-gray-100">
+        <a
+          href="https://awareness-design.studio.site/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-600 no-underline hover:no-underline focus:no-underline"
+        >
+          awareness=design
+        </a>
+      </div>
     </div>
   );
 }

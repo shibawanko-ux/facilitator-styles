@@ -1,11 +1,13 @@
-import { useRef } from 'react';
-import { DiagnosisResult } from '../data/types';
+import { useRef, useState } from 'react';
+import { DiagnosisResult, FacilitatorType } from '../data/types';
 import { ScoreChart } from './ScoreChart';
 import { CofaciliSection } from './CofaciliSection';
 import { ShareSection } from './ShareSection';
+import { TypeDetailModal } from './TypeDetailModal';
 import { getCofaciliSummary } from '../data/typeCofaciliSummary';
-import { getTypeCompatibility } from '../data/typeCompatibility';
+import { getTypeCompatibility, type CompatibilityItem } from '../data/typeCompatibility';
 import { getQuadrantKeywords } from '../data/typeKeywords';
+import { getFacilitatorTypeById } from '../data/facilitatorTypes';
 import { FormattedText } from './FormattedText';
 
 interface ResultPageProps {
@@ -15,10 +17,19 @@ interface ResultPageProps {
 
 export function ResultPage({ result, onRestart }: ResultPageProps) {
   const resultRef = useRef<HTMLDivElement>(null);
+  const [selectedCompatType, setSelectedCompatType] = useState<FacilitatorType | null>(null);
 
   return (
     <div className="min-h-screen bg-white py-12 px-6">
       <div className="max-w-3xl mx-auto">
+        {/* ロゴ（TOPページと同様） */}
+        <div className="text-center mb-4">
+          <img
+            src="/logo.png"
+            alt="awareness=design"
+            className="h-8 md:h-10 mx-auto object-contain"
+          />
+        </div>
         {/* ヒーローセクション：タイプ概要 */}
         <div ref={resultRef} className="card mb-10 animate-fade-in">
           {/* ヘッダー */}
@@ -57,7 +68,7 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
             ))}
           </div>
 
-          {/* 傾向キーワード：4象限に強み文章（axisContents の strengths をそのまま）＋中央にタイプ名（2.7 採用） */}
+          {/* 傾向キーワード：4象限＋タイプ名（2.8: 重なり解消・階層・軸色） */}
           {(() => {
             const q = getQuadrantKeywords(
               {
@@ -73,50 +84,56 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
                 engagement: result.type.engagement,
               }
             );
+            // 軸色ルール: 介入=赤, 判断=黄, 知覚=緑, 場の関わり=青
+            const axisColors = {
+              intervention: { bg: 'bg-red-50', border: 'border-red-200', axisText: 'text-red-700', labelText: 'text-red-600' },
+              perception: { bg: 'bg-emerald-50', border: 'border-emerald-200', axisText: 'text-emerald-700', labelText: 'text-emerald-600' },
+              judgment: { bg: 'bg-amber-50', border: 'border-amber-200', axisText: 'text-amber-700', labelText: 'text-amber-600' },
+              engagement: { bg: 'bg-sky-50', border: 'border-sky-200', axisText: 'text-sky-700', labelText: 'text-sky-600' },
+            } as const;
             const Cell = ({
               axisName,
               typeLabel,
               keywords,
+              axisKey,
             }: {
               axisName: string;
               typeLabel: string;
               keywords: string[];
-            }) => (
-              <div className="bg-white border border-gray-300 p-2">
-                <div className="text-xs font-semibold text-gray-500 mb-0.5">{axisName}</div>
-                <div className="text-xs font-medium text-gray-700 mb-1">{typeLabel}</div>
-                <ul className="text-xs text-gray-600 space-y-0.5 list-none break-words">
-                  {keywords.map((kw, i) => (
-                    <li key={i}>{kw}</li>
-                  ))}
-                </ul>
-              </div>
-            );
+              axisKey: keyof typeof axisColors;
+            }) => {
+              const c = axisColors[axisKey];
+              return (
+                <div className={`${c.bg} border-l-4 ${c.border} p-3 h-full`}>
+                  <div className={`text-sm font-semibold ${c.axisText} mb-2`}>
+                    {axisName}：<span className={`font-bold ${c.labelText}`}>{typeLabel}</span>
+                  </div>
+                  <ul className="text-xs text-gray-600 space-y-0.5 list-none break-words">
+                    {keywords.map((kw, i) => (
+                      <li key={i}>・{kw}</li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            };
             return (
               <div className="mb-8 max-w-2xl mx-auto">
-                <table className="w-full border-collapse border border-gray-300" style={{ tableLayout: 'fixed' }}>
-                  <tbody>
-                    <tr>
-                      <td className="w-1/3 align-top border border-gray-300 p-0">
-                        <Cell axisName={q.intervention.axisName} typeLabel={q.intervention.typeLabel} keywords={q.intervention.keywords} />
-                      </td>
-                      <td rowSpan={2} className="w-1/3 align-middle text-center border border-gray-300 bg-primary-50 p-4">
-                        <span className="text-sm font-bold text-primary-800">{result.type.name}</span>
-                      </td>
-                      <td className="w-1/3 align-top border border-gray-300 p-0">
-                        <Cell axisName={q.perception.axisName} typeLabel={q.perception.typeLabel} keywords={q.perception.keywords} />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="align-top border border-gray-300 p-0">
-                        <Cell axisName={q.judgment.axisName} typeLabel={q.judgment.typeLabel} keywords={q.judgment.keywords} />
-                      </td>
-                      <td className="align-top border border-gray-300 p-0">
-                        <Cell axisName={q.engagement.axisName} typeLabel={q.engagement.typeLabel} keywords={q.engagement.keywords} />
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                <h3 className="text-center text-sm font-bold text-primary-800 mb-3">あなたのファシリテーション特性</h3>
+                {/* 4象限：2×2グリッド・軸色・罫線 */}
+                <div className="grid grid-cols-2 border border-gray-300">
+                  <div className="border-b border-r border-gray-300">
+                    <Cell axisKey="intervention" axisName={q.intervention.axisName} typeLabel={q.intervention.typeLabel} keywords={q.intervention.keywords} />
+                  </div>
+                  <div className="border-b border-gray-300">
+                    <Cell axisKey="perception" axisName={q.perception.axisName} typeLabel={q.perception.typeLabel} keywords={q.perception.keywords} />
+                  </div>
+                  <div className="border-r border-gray-300">
+                    <Cell axisKey="judgment" axisName={q.judgment.axisName} typeLabel={q.judgment.typeLabel} keywords={q.judgment.keywords} />
+                  </div>
+                  <div>
+                    <Cell axisKey="engagement" axisName={q.engagement.axisName} typeLabel={q.engagement.typeLabel} keywords={q.engagement.keywords} />
+                  </div>
+                </div>
               </div>
             );
           })()}
@@ -272,34 +289,50 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
               <div className="space-y-6">
                 {compatibility.good.length > 0 && (
                   <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-                    <h3 className="text-sm font-semibold text-emerald-800 mb-3">相性が良いタイプ</h3>
-                    <ul className="space-y-3">
-                      {compatibility.good.map((item) => (
-                        <li key={item.typeId} className="text-sm">
-                          <span className="font-medium text-emerald-800">{item.typeName}</span>
-                          <p className="text-gray-600 mt-1">{item.hint}</p>
-                        </li>
+                    <h3 className="text-sm font-semibold text-emerald-800 mb-4">相性が良いタイプ</h3>
+                    <div className="space-y-4">
+                      {compatibility.good.map((item: CompatibilityItem) => (
+                        <button
+                          key={item.typeId}
+                          type="button"
+                          onClick={() => setSelectedCompatType(getFacilitatorTypeById(item.typeId) ?? null)}
+                          className="w-full text-left p-3 bg-white rounded-lg border border-emerald-100 hover:border-emerald-200 hover:shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1"
+                        >
+                          <p className="font-bold text-emerald-800 text-base">{item.typeName}</p>
+                          <p className="text-sm text-gray-600 mt-1 leading-relaxed">{item.hint}</p>
+                        </button>
                       ))}
-                    </ul>
+                    </div>
                   </div>
                 )}
                 {compatibility.difficult.length > 0 && (
                   <div className="p-4 bg-amber-50 rounded-xl border border-amber-100">
-                    <h3 className="text-sm font-semibold text-amber-800 mb-3">難しいかもという相性</h3>
-                    <ul className="space-y-3">
-                      {compatibility.difficult.map((item) => (
-                        <li key={item.typeId} className="text-sm">
-                          <span className="font-medium text-amber-800">{item.typeName}</span>
-                          <p className="text-gray-600 mt-1">{item.hint}</p>
-                        </li>
+                    <h3 className="text-sm font-semibold text-amber-800 mb-4">難しいかもという相性</h3>
+                    <div className="space-y-4">
+                      {compatibility.difficult.map((item: CompatibilityItem) => (
+                        <button
+                          key={item.typeId}
+                          type="button"
+                          onClick={() => setSelectedCompatType(getFacilitatorTypeById(item.typeId) ?? null)}
+                          className="w-full text-left p-3 bg-white rounded-lg border border-amber-100 hover:border-amber-200 hover:shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1"
+                        >
+                          <p className="font-bold text-amber-800 text-base">{item.typeName}</p>
+                          <p className="text-sm text-gray-600 mt-1 leading-relaxed">{item.hint}</p>
+                        </button>
                       ))}
-                    </ul>
+                    </div>
                   </div>
                 )}
               </div>
             </div>
           );
         })()}
+
+        {/* 相性タイプ詳細モーダル */}
+        <TypeDetailModal
+          type={selectedCompatType}
+          onClose={() => setSelectedCompatType(null)}
+        />
 
         {/* シェア・保存セクション */}
         <div className="card mb-10">
@@ -325,6 +358,18 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
           >
             もう一度診断する
           </button>
+        </div>
+
+        {/* フッター */}
+        <div className="mt-12 px-6 py-8 text-center bg-white border-t border-gray-100">
+          <a
+            href="https://awareness-design.studio.site/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-600 no-underline hover:no-underline focus:no-underline"
+          >
+            awareness=design
+          </a>
         </div>
       </div>
     </div>

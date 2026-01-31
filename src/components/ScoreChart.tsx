@@ -21,39 +21,42 @@ interface AxisBarProps {
 }
 
 function AxisBar({ axisName, score, leftLabel, rightLabel, tendency, colorClass }: AxisBarProps) {
-  // スコア8-48を0-100%に変換（6段階）。0%=左端、50%=中央、100%=右端
+  // スコア8-48を0-100%に変換。0%=左端、50%=中央、100%=右端
   const percentage = ((score - 8) / 40) * 100;
   const strength = getTendencyStrength(score);
   
   // 傾向の方向（左か右か）。中央28でA/Bを分ける
   const isLeftTendency = score <= 27;
-  // 表示用％：どちら側に何％寄っているか（2-D：目立たせる）
-  const displayPercent = isLeftTendency ? Math.round(100 - percentage) : Math.round(percentage);
+  // 表示用％：中心を0%として「該当の型に○%寄っている」（中心から端までが0→100%）
+  const displayPercent = isLeftTendency
+    ? Math.round(((50 - percentage) / 50) * 100)
+    : Math.round(((percentage - 50) / 50) * 100);
   
+  // 軸色: 介入=赤, 判断=黄, 知覚=緑, 場の関わり=青
   const colorClasses: Record<string, { fill: string; text: string; lightBg: string }> = {
-    primary: {
-      fill: 'bg-slate-600',
-      text: 'text-slate-700',
-      lightBg: 'bg-slate-50',
+    red: {
+      fill: 'bg-red-500',
+      text: 'text-red-700',
+      lightBg: 'bg-red-50',
     },
     accent: {
       fill: 'bg-emerald-500',
       text: 'text-emerald-700',
       lightBg: 'bg-emerald-50',
     },
+    amber: {
+      fill: 'bg-amber-500',
+      text: 'text-amber-700',
+      lightBg: 'bg-amber-50',
+    },
     blue: {
       fill: 'bg-sky-500',
       text: 'text-sky-700',
       lightBg: 'bg-sky-50',
     },
-    green: {
-      fill: 'bg-teal-500',
-      text: 'text-teal-700',
-      lightBg: 'bg-teal-50',
-    },
   };
   
-  const colors = colorClasses[colorClass] || colorClasses.primary;
+  const colors = colorClasses[colorClass] || colorClasses.red;
 
   return (
     <div className={`p-5 rounded-xl ${colors.lightBg} mb-4 last:mb-0 border border-gray-100`}>
@@ -105,7 +108,7 @@ export function ScoreChart({ scores, tendencies }: ScoreChartProps) {
         leftLabel="触発型"
         rightLabel="見守型"
         tendency={tendencies.intervention}
-        colorClass="primary"
+        colorClass="red"
       />
       <AxisBar
         axisName="知覚対象"
@@ -121,7 +124,7 @@ export function ScoreChart({ scores, tendencies }: ScoreChartProps) {
         leftLabel="目的型"
         rightLabel="関係型"
         tendency={tendencies.judgment}
-        colorClass="blue"
+        colorClass="amber"
       />
       <AxisBar
         axisName="場への関わり"
@@ -129,7 +132,7 @@ export function ScoreChart({ scores, tendencies }: ScoreChartProps) {
         leftLabel="設計型"
         rightLabel="即興型"
         tendency={tendencies.engagement}
-        colorClass="green"
+        colorClass="blue"
       />
     </div>
   );

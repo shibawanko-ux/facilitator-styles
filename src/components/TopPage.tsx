@@ -1,12 +1,22 @@
+import { useState } from 'react';
 import { facilitatorTypes } from '../data/facilitatorTypes';
 import { FacilitatorType } from '../data/types';
+import { TypeDetailModal } from './TypeDetailModal';
 
 interface TopPageProps {
   onStart: () => void;
 }
 
-// タイプカードコンポーネント
-function TypeCard({ type, colorClass }: { type: FacilitatorType; colorClass: string }) {
+// タイプカードコンポーネント（クリックで詳細モーダル表示）
+function TypeCard({
+  type,
+  colorClass,
+  onClick,
+}: {
+  type: FacilitatorType;
+  colorClass: string;
+  onClick: () => void;
+}) {
   const colorClasses: Record<string, { bg: string; border: string; text: string; iconBg: string }> = {
     primary: {
       bg: 'bg-slate-50',
@@ -37,7 +47,11 @@ function TypeCard({ type, colorClass }: { type: FacilitatorType; colorClass: str
   const colors = colorClasses[colorClass] || colorClasses.primary;
 
   return (
-    <div className={`p-4 rounded-xl border ${colors.border} ${colors.bg} hover:shadow-md hover:-translate-y-0.5 transition-all duration-300`}>
+    <button
+      type="button"
+      onClick={onClick}
+      className={`w-full text-left p-4 rounded-xl border ${colors.border} ${colors.bg} hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2`}
+    >
       <div className="flex items-start gap-3">
         <div className={`w-10 h-10 rounded-lg ${colors.iconBg} flex items-center justify-center flex-shrink-0`}>
           <span className="text-white font-bold text-sm">
@@ -46,24 +60,26 @@ function TypeCard({ type, colorClass }: { type: FacilitatorType; colorClass: str
         </div>
         <div className="min-w-0">
           <h4 className={`font-bold ${colors.text} text-sm`}>{type.name}</h4>
-          <p className="text-xs text-gray-500 mt-1 line-clamp-2">{type.catchcopy}</p>
+          <p className="text-xs text-gray-500 mt-1 line-clamp-2">{type.catchcopy.replace(/\*\*/g, '')}</p>
         </div>
       </div>
-    </div>
+    </button>
   );
 }
 
 // タイプカテゴリコンポーネント
-function TypeCategory({ 
-  title, 
-  description, 
-  types, 
-  colorClass 
-}: { 
-  title: string; 
-  description: string; 
-  types: FacilitatorType[]; 
+function TypeCategory({
+  title,
+  description,
+  types,
+  colorClass,
+  onTypeClick,
+}: {
+  title: string;
+  description: string;
+  types: FacilitatorType[];
   colorClass: string;
+  onTypeClick: (type: FacilitatorType) => void;
 }) {
   const colorClasses: Record<string, { headerBg: string; headerText: string; accent: string }> = {
     primary: { headerBg: 'bg-slate-700', headerText: 'text-white', accent: 'text-slate-300' },
@@ -83,7 +99,12 @@ function TypeCategory({
       <div className="bg-white rounded-b-2xl border border-t-0 border-gray-100 p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {types.map((type) => (
-            <TypeCard key={type.id} type={type} colorClass={colorClass} />
+            <TypeCard
+              key={type.id}
+              type={type}
+              colorClass={colorClass}
+              onClick={() => onTypeClick(type)}
+            />
           ))}
         </div>
       </div>
@@ -92,6 +113,8 @@ function TypeCategory({
 }
 
 export function TopPage({ onStart }: TopPageProps) {
+  const [selectedType, setSelectedType] = useState<FacilitatorType | null>(null);
+
   // タイプをカテゴリ別に分類
   const triggerGoalTypes = facilitatorTypes.filter(
     t => t.intervention === 'trigger' && t.judgment === 'goal'
@@ -136,23 +159,23 @@ export function TopPage({ onStart }: TopPageProps) {
               4つの軸であなたのスタイルを可視化し、強みや成長のヒントをお伝えします。
             </p>
             
-            {/* 4軸の説明 */}
+            {/* 4軸の説明（軸色: 介入=赤, 知覚=緑, 判断=黄, 場の関わり=青） */}
             <div className="grid grid-cols-2 gap-4 mb-8">
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-slate-200 transition-colors">
-                <p className="text-sm font-medium text-slate-700">介入スタイル</p>
-                <p className="text-xs text-slate-500 mt-1">触発型 ⇔ 見守型</p>
+              <div className="p-4 bg-red-50 rounded-xl border border-red-100 hover:border-red-200 transition-colors">
+                <p className="text-sm font-medium text-red-700">介入スタイル</p>
+                <p className="text-xs text-red-500 mt-1">触発型 ⇔ 見守型</p>
               </div>
               <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100 hover:border-emerald-200 transition-colors">
                 <p className="text-sm font-medium text-emerald-700">知覚対象</p>
                 <p className="text-xs text-emerald-500 mt-1">観察型 ⇔ 洞察型</p>
               </div>
-              <div className="p-4 bg-sky-50 rounded-xl border border-sky-100 hover:border-sky-200 transition-colors">
-                <p className="text-sm font-medium text-sky-700">判断基準</p>
-                <p className="text-xs text-sky-500 mt-1">目的型 ⇔ 関係型</p>
+              <div className="p-4 bg-amber-50 rounded-xl border border-amber-100 hover:border-amber-200 transition-colors">
+                <p className="text-sm font-medium text-amber-700">判断基準</p>
+                <p className="text-xs text-amber-500 mt-1">目的型 ⇔ 関係型</p>
               </div>
-              <div className="p-4 bg-teal-50 rounded-xl border border-teal-100 hover:border-teal-200 transition-colors">
-                <p className="text-sm font-medium text-teal-700">場への関わり</p>
-                <p className="text-xs text-teal-500 mt-1">設計型 ⇔ 即興型</p>
+              <div className="p-4 bg-sky-50 rounded-xl border border-sky-100 hover:border-sky-200 transition-colors">
+                <p className="text-sm font-medium text-sky-700">場への関わり</p>
+                <p className="text-xs text-sky-500 mt-1">設計型 ⇔ 即興型</p>
               </div>
             </div>
 
@@ -205,6 +228,7 @@ export function TopPage({ onStart }: TopPageProps) {
               description="場を動かしながら、ゴールに向けて推進する"
               types={triggerGoalTypes}
               colorClass="primary"
+              onTypeClick={setSelectedType}
             />
 
             <TypeCategory
@@ -212,6 +236,7 @@ export function TopPage({ onStart }: TopPageProps) {
               description="場を盛り上げながら、関係性を育てる"
               types={triggerRelationTypes}
               colorClass="accent"
+              onTypeClick={setSelectedType}
             />
           </div>
 
@@ -235,6 +260,7 @@ export function TopPage({ onStart }: TopPageProps) {
               description="裏方として、確実にゴールへ導く"
               types={watchGoalTypes}
               colorClass="blue"
+              onTypeClick={setSelectedType}
             />
 
             <TypeCategory
@@ -242,6 +268,7 @@ export function TopPage({ onStart }: TopPageProps) {
               description="安心感を与え、関係性を守り育てる"
               types={watchRelationTypes}
               colorClass="green"
+              onTypeClick={setSelectedType}
             />
           </div>
 
@@ -260,8 +287,19 @@ export function TopPage({ onStart }: TopPageProps) {
         </div>
       </div>
 
+      {/* タイプ詳細モーダル */}
+      <TypeDetailModal type={selectedType} onClose={() => setSelectedType(null)} />
+
       {/* フッター */}
       <div className="px-6 py-8 text-center bg-white border-t border-gray-100">
+        <a
+          href="https://awareness-design.studio.site/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-600 no-underline hover:no-underline focus:no-underline"
+        >
+          awareness=design
+        </a>
       </div>
     </div>
   );
