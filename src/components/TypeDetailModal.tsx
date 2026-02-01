@@ -91,8 +91,8 @@ export function TypeDetailModal({ type, onClose }: TypeDetailModalProps) {
         </div>
 
         <div className="px-6 pb-8">
-          {/* ヒーロー（青ヘッダー） */}
-          <div className="bg-primary-600 rounded-t-2xl px-6 pt-8 pb-8 mb-6 text-white text-center">
+          {/* ヒーロー（結果ページと同様にグレー slate-600 で統一） */}
+          <div className="bg-slate-600 rounded-t-2xl px-6 pt-8 pb-8 mb-6 text-white text-center">
             <h2 id="type-detail-title" className="text-2xl md:text-3xl font-bold mb-3 mt-0">
               {type.name}
             </h2>
