@@ -79,13 +79,17 @@ function AxisBar({ axisName, score, leftLabel, rightLabel, tendency, colorClass 
         </div>
       </div>
 
-      {/* 2. 直下にタイトル行（軸名: XX% 〇〇型）・余白を詰める */}
-      <div className="flex justify-between items-center mb-1">
-        <p className="text-base font-semibold text-slate-800 leading-tight">
-          <span className="text-slate-600">{axisName}: </span>
-          <span className={`font-bold text-lg ${colors.text}`}>{displayPercent}%</span>
-          <span className={`font-semibold ml-1 ${colors.text}`}>{tendency.label}</span>
-        </p>
+      {/* 2. 直下にタイトル行。スマホのみ2行（軸名: / XX%〇〇型）、sm以上は1行 */}
+      <div className="flex justify-between items-start sm:items-center mb-1">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2 gap-0">
+          <p className="text-base font-semibold text-slate-800 leading-tight text-slate-600">
+            {axisName}:
+          </p>
+          <p className="text-base font-semibold text-slate-800 leading-tight sm:flex sm:items-center sm:gap-1">
+            <span className={`font-bold text-lg ${colors.text}`}>{displayPercent}%</span>
+            <span className={`font-semibold ${colors.text}`}>{tendency.label}</span>
+          </p>
+        </div>
         <span className="text-xs text-slate-400 bg-white px-2.5 py-0.5 rounded-full border border-slate-100 shrink-0">
           {strength.label}
         </span>

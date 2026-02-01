@@ -34,36 +34,12 @@ export function ShareSection({ result }: ShareSectionProps) {
     window.open(url, '_blank', 'noopener,noreferrer');
   }, [shareTextForTwitter, shareUrl]);
 
-  // Facebookでシェア（R-SHARE-FB-01 案C: 結果テキストをクリップボードにコピーして案内）
-  const shareOnFacebook = useCallback(async () => {
-    try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(shareTextFull);
-      } else {
-        const textarea = document.createElement('textarea');
-        textarea.value = shareTextFull;
-        textarea.setAttribute('readonly', '');
-        textarea.style.position = 'fixed';
-        textarea.style.opacity = '0';
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-      }
-      alert('結果テキストをクリップボードにコピーしました。Facebookの投稿欄に貼り付けて投稿してください。');
-    } catch {
-      alert('コピーに失敗しました。以下のURLをFacebookでシェアしてください。\n' + shareUrl);
-    }
-    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
-  }, [shareTextFull, shareUrl]);
-
-  // クリップボードにコピー（告知・URL・ハッシュタグ含む全文）
+  // クリップボードにコピー（告知・URL・ハッシュタグ含む全文）。X/Facebook等に貼り付けてシェア可能
   const copyToClipboard = useCallback(async () => {
     try {
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(shareTextFull);
-        alert('クリップボードにコピーしました！');
+        alert('クリップボードにコピーしました！XやFacebookの投稿欄に貼り付けてシェアできます。');
         return;
       }
       // 非HTTPS等で clipboard API が使えない場合のフォールバック
@@ -77,7 +53,7 @@ export function ShareSection({ result }: ShareSectionProps) {
       const ok = document.execCommand('copy');
       document.body.removeChild(textarea);
       if (ok) {
-        alert('クリップボードにコピーしました！');
+        alert('クリップボードにコピーしました！XやFacebookの投稿欄に貼り付けてシェアできます。');
       } else {
         alert('コピーに失敗しました。お手数ですが本文を選択してコピーしてください。');
       }
@@ -91,6 +67,7 @@ export function ShareSection({ result }: ShareSectionProps) {
       {/* SNSシェアボタン */}
       <div>
         <h3 className="text-sm font-medium text-slate-700 mb-3">SNSでシェア</h3>
+        <p className="text-xs text-slate-500 mb-3">コピーしてXやFacebookの投稿欄に貼り付けてシェアできます。</p>
         <div className="flex flex-wrap gap-3">
           {/* X/Twitter */}
           <button
@@ -103,18 +80,7 @@ export function ShareSection({ result }: ShareSectionProps) {
             <span className="text-sm font-medium">X</span>
           </button>
 
-          {/* Facebook（R-SHARE-FB-01: クリップボードに結果テキストをコピーして案内） */}
-          <button
-            onClick={shareOnFacebook}
-            className="flex items-center gap-2 px-4 py-2 bg-[#1877F2] text-white rounded-xl hover:bg-[#166FE5] transition-colors"
-          >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-            </svg>
-            <span className="text-sm font-medium">Facebook</span>
-          </button>
-
-          {/* コピー */}
+          {/* コピー（X/Facebook等に貼り付けてシェア可能・Facebookボタンは投稿文が反映されないため削除） */}
           <button
             onClick={copyToClipboard}
             className="flex items-center gap-2 px-4 py-2 bg-slate-200 text-slate-700 rounded-xl hover:bg-slate-300 transition-colors"

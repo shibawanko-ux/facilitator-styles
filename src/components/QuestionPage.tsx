@@ -67,15 +67,15 @@ export function QuestionPage({
             {question.text}
           </h2>
 
-          {/* 選択肢の両極（A＝赤系統・B＝青系統。色は 13_design_direction の指定クラスで統一） */}
-          <div className="flex justify-between mb-8 text-sm">
-            <div className="flex-1 text-left">
+          {/* 選択肢の両極（A＝赤・B＝青）。アイコン・文字は中央寄せ。中央に隙間を入れてA/Bエリアを明確に */}
+          <div className="flex gap-6 md:gap-8 mb-8 text-sm">
+            <div className="flex-1 min-w-0 flex flex-col items-center text-center">
               <span className="inline-block px-3 py-1 rounded-full font-semibold text-xs bg-red-100 text-red-800 border border-red-300 mb-2">
                 A
               </span>
               <p className="text-red-800 font-bold">{question.optionA}</p>
             </div>
-            <div className="flex-1 text-right">
+            <div className="flex-1 min-w-0 flex flex-col items-center text-center">
               <span className="inline-block px-3 py-1 rounded-full font-semibold text-xs bg-blue-100 text-blue-800 border border-blue-300 mb-2">
                 B
               </span>

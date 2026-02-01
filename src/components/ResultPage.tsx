@@ -36,8 +36,8 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
           {/* ヒーローセクション：タイプ概要 */}
           <div className="card mb-0 animate-fade-in">
           {/* ヘッダー */}
-          <div className="bg-primary-600 -mx-8 -mt-8 px-8 py-10 mb-8 rounded-t-2xl text-white text-center">
-            <p className="text-sm text-primary-200 mb-2">あなたのファシリテータースタイルは...</p>
+          <div className="bg-slate-600 -mx-8 -mt-8 px-8 py-10 mb-8 rounded-t-2xl text-white text-center">
+            <p className="text-sm text-slate-200 mb-2">あなたのファシリテータースタイルは...</p>
             <h1 className="text-3xl md:text-4xl font-bold mb-3">
               {result.type.name}
             </h1>
