@@ -34,7 +34,7 @@ function parseBold(str: string): ReactNode[] {
   const parts = str.split(/(\*\*[^*]+\*\*)/g);
   return parts.map((part, i) => {
     const match = part.match(/^\*\*(.+)\*\*$/);
-    if (match) return <strong key={i} className="font-semibold text-gray-800">{match[1]}</strong>;
+    if (match) return <strong key={i} className="font-semibold text-slate-800">{match[1]}</strong>;
     return part;
   });
 }

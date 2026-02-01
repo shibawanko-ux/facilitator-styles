@@ -35,7 +35,7 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
           {/* ヒーローセクション：タイプ概要 */}
           <div className="card mb-0 animate-fade-in">
           {/* ヘッダー */}
-          <div className="bg-primary-700 -mx-8 -mt-8 px-8 py-10 mb-8 rounded-t-2xl text-white text-center">
+          <div className="bg-primary-600 -mx-8 -mt-8 px-8 py-10 mb-8 rounded-t-2xl text-white text-center">
             <p className="text-sm text-primary-200 mb-2">あなたのファシリテータースタイルは...</p>
             <h1 className="text-3xl md:text-4xl font-bold mb-3">
               {result.type.name}
@@ -53,7 +53,7 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
               ].map((label) => (
                 <span
                   key={label}
-                  className="inline-block px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-700"
+                  className="inline-block px-4 py-2 rounded-full text-sm font-medium bg-slate-100 text-slate-700"
                 >
                   {label}
                 </span>
@@ -64,7 +64,7 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
           {/* タイプの詳細説明（複数段落・太字対応） */}
           <div className="space-y-4 mb-8">
             {result.type.detailedDescription.map((paragraph, index) => (
-              <p key={index} className="text-gray-600 leading-relaxed">
+              <p key={index} className="text-slate-600 leading-relaxed">
                 <FormattedText text={paragraph} as="span" />
               </p>
             ))}
@@ -110,7 +110,7 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
                   <div className={`text-sm font-semibold ${c.axisText} mb-2`}>
                     {axisName}：<span className={`font-bold ${c.labelText}`}>{typeLabel}</span>
                   </div>
-                  <ul className="text-xs text-gray-600 space-y-0.5 list-none break-words">
+                  <ul className="text-xs text-slate-600 space-y-0.5 list-none break-words">
                     {keywords.map((kw, i) => (
                       <li key={i}>・{kw}</li>
                     ))}
@@ -151,22 +151,22 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
             return (
               <div className="mb-8 max-w-2xl mx-auto">
                 {/* タイトル（小さく） */}
-                <h3 className="text-center text-sm font-bold text-gray-600 mb-1">あなたのファシリテーション特性</h3>
+                <h3 className="text-center text-sm font-bold text-slate-600 mb-1">あなたのファシリテーション特性</h3>
                 {/* サブタイトル：型×グループ（塊と同色） */}
                 <p className={`text-center text-base md:text-lg font-bold mb-1 ${subtitleColorClass}`}>
                   {interventionLabel} × {groupLabel}
                 </p>
                 {/* リード文 */}
-                <p className="text-center text-sm text-gray-600 mb-4">{leadText}</p>
+                <p className="text-center text-sm text-slate-600 mb-4">{leadText}</p>
                 {/* 4象限：2×2グリッド・軸色・罫線 */}
-                <div className="grid grid-cols-2 border border-gray-300">
-                  <div className="border-b border-r border-gray-300">
+                <div className="grid grid-cols-2 border border-slate-300">
+                  <div className="border-b border-r border-slate-300">
                     <Cell axisKey="intervention" axisName={q.intervention.axisName} typeLabel={q.intervention.typeLabel} keywords={q.intervention.keywords} />
                   </div>
-                  <div className="border-b border-gray-300">
+                  <div className="border-b border-slate-300">
                     <Cell axisKey="perception" axisName={q.perception.axisName} typeLabel={q.perception.typeLabel} keywords={q.perception.keywords} />
                   </div>
-                  <div className="border-r border-gray-300">
+                  <div className="border-r border-slate-300">
                     <Cell axisKey="judgment" axisName={q.judgment.axisName} typeLabel={q.judgment.typeLabel} keywords={q.judgment.keywords} />
                   </div>
                   <div>
@@ -178,13 +178,13 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
           })()}
 
           {/* 得意な場面 */}
-          <div className="pt-6 border-t border-gray-100">
-            <h3 className="text-sm font-semibold text-gray-700 mb-4">得意な場面</h3>
+          <div className="pt-6 border-t border-slate-100">
+            <h3 className="text-sm font-semibold text-slate-700 mb-4">得意な場面</h3>
             <div className="flex flex-wrap gap-2">
               {result.type.goodScenes.map((scene, index) => (
                 <span
                   key={index}
-                  className="px-4 py-2 bg-gray-50 text-gray-600 rounded-full text-sm border border-gray-100 hover:border-gray-200 transition-colors"
+                  className="px-4 py-2 bg-slate-50 text-slate-600 rounded-full text-sm border border-slate-100 hover:border-slate-200 transition-colors"
                 >
                   {scene}
                 </span>
@@ -211,8 +211,8 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
               </svg>
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-gray-800">ファシリテーター特性</h2>
-              <p className="text-sm text-gray-500">4つの軸であなたのファシリテーター傾向を分析</p>
+              <h2 className="text-xl font-semibold text-slate-800">ファシリテーター特性</h2>
+              <p className="text-sm text-slate-500">4つの軸であなたのファシリテーター傾向を分析</p>
             </div>
           </div>
           <ScoreChart scores={result.scores} tendencies={result.tendencies} />
@@ -228,7 +228,7 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-gray-800">強み</h2>
+              <h2 className="text-xl font-semibold text-slate-800">強み</h2>
             </div>
             <div className="space-y-3">
               {[
@@ -238,10 +238,10 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
                 result.tendencies.engagement,
               ].map((tendency, tendencyIndex) => (
                 <div key={tendencyIndex} className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-                  <h4 className="font-medium text-gray-800 text-sm">
+                  <h4 className="font-medium text-slate-800 text-sm">
                     {tendency.strengths[0].title}
                   </h4>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-slate-500 mt-1">
                     {tendency.strengths[0].description}
                   </p>
                 </div>
@@ -257,7 +257,7 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-gray-800">注意点</h2>
+              <h2 className="text-xl font-semibold text-slate-800">注意点</h2>
             </div>
             <div className="space-y-3">
               {[
@@ -267,10 +267,10 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
                 result.tendencies.engagement,
               ].map((tendency, tendencyIndex) => (
                 <div key={tendencyIndex} className="p-4 bg-amber-50 rounded-xl border border-amber-100">
-                  <h4 className="font-medium text-gray-800 text-sm">
+                  <h4 className="font-medium text-slate-800 text-sm">
                     {tendency.weaknesses[0].title}
                   </h4>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-slate-500 mt-1">
                     {tendency.weaknesses[0].description}
                   </p>
                 </div>
@@ -288,13 +288,13 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
               </svg>
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-gray-800">ファシリテーターとしての影響力</h2>
-              <p className="text-sm text-gray-500">場や参加者にあなたが与える影響</p>
+              <h2 className="text-xl font-semibold text-slate-800">ファシリテーターとしての影響力</h2>
+              <p className="text-sm text-slate-500">場や参加者にあなたが与える影響</p>
             </div>
           </div>
           <FormattedText
             text={result.type.influenceDescription}
-            className="text-gray-600 leading-relaxed"
+            className="text-slate-600 leading-relaxed"
           />
         </div>
 
@@ -307,8 +307,8 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
               </svg>
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-gray-800">コーファシリとの組み合わせヒント</h2>
-              <p className="text-sm text-gray-500">他のファシリテーターとの協力方法</p>
+              <h2 className="text-xl font-semibold text-slate-800">コーファシリとの組み合わせヒント</h2>
+              <p className="text-sm text-slate-500">他のファシリテーターとの協力方法</p>
             </div>
           </div>
           <CofaciliSection
@@ -330,8 +330,8 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
                   </svg>
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-800">他のスタイルとの相性</h2>
-                  <p className="text-sm text-gray-500">相性が良いスタイル・難しいスタイルと振る舞いのヒント</p>
+                  <h2 className="text-xl font-semibold text-slate-800">他のスタイルとの相性</h2>
+                  <p className="text-sm text-slate-500">相性が良いスタイル・難しいスタイルと振る舞いのヒント</p>
                 </div>
               </div>
               <div className="space-y-6">
@@ -344,10 +344,10 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
                           key={item.typeId}
                           type="button"
                           onClick={() => setSelectedCompatType(getFacilitatorTypeById(item.typeId) ?? null)}
-                          className="w-full text-left p-3 bg-white rounded-lg border border-emerald-100 hover:border-emerald-200 hover:shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1"
+                          className="w-full text-left p-3 bg-white rounded-xl border border-emerald-100 hover:border-emerald-200 hover:shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1"
                         >
                           <p className="font-bold text-emerald-800 text-base">{item.typeName}</p>
-                          <p className="text-sm text-gray-600 mt-1 leading-relaxed">{item.hint}</p>
+                          <p className="text-sm text-slate-600 mt-1 leading-relaxed">{item.hint}</p>
                         </button>
                       ))}
                     </div>
@@ -362,10 +362,10 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
                           key={item.typeId}
                           type="button"
                           onClick={() => setSelectedCompatType(getFacilitatorTypeById(item.typeId) ?? null)}
-                          className="w-full text-left p-3 bg-white rounded-lg border border-amber-100 hover:border-amber-200 hover:shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1"
+                          className="w-full text-left p-3 bg-white rounded-xl border border-amber-100 hover:border-amber-200 hover:shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1"
                         >
                           <p className="font-bold text-amber-800 text-base">{item.typeName}</p>
-                          <p className="text-sm text-gray-600 mt-1 leading-relaxed">{item.hint}</p>
+                          <p className="text-sm text-slate-600 mt-1 leading-relaxed">{item.hint}</p>
                         </button>
                       ))}
                     </div>
@@ -391,8 +391,8 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
               </svg>
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-gray-800">結果をシェア・保存</h2>
-              <p className="text-sm text-gray-500">SNSでシェアまたは画像で保存</p>
+              <h2 className="text-xl font-semibold text-slate-800">結果をシェア・保存</h2>
+              <p className="text-sm text-slate-500">SNSでシェアまたは画像で保存</p>
             </div>
           </div>
           <ShareSection result={result} resultRef={resultRef} />
@@ -409,12 +409,12 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
         </div>
 
         {/* フッター */}
-        <div className="mt-12 px-6 py-8 text-center bg-white border-t border-gray-100">
+        <div className="mt-12 px-6 py-8 text-center bg-white border-t border-slate-100">
           <a
             href="https://awareness-design.studio.site/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-600 no-underline hover:no-underline focus:no-underline"
+            className="text-slate-600 no-underline hover:no-underline focus:no-underline"
           >
             awareness=design
           </a>

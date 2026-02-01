@@ -34,14 +34,14 @@ function TypeCard({
       className={`w-full text-left p-4 rounded-xl border ${colors.border} ${colors.bg} hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2`}
     >
       <div className="flex items-start gap-3">
-        <div className={`w-10 h-10 rounded-lg ${colors.iconBg} flex items-center justify-center flex-shrink-0`}>
+        <div className={`w-10 h-10 rounded-xl ${colors.iconBg} flex items-center justify-center flex-shrink-0`}>
           <span className="text-white font-bold text-sm">
             {type.name.charAt(0)}
           </span>
         </div>
         <div className="min-w-0">
           <h4 className={`font-bold ${colors.text} text-sm`}>{type.name}</h4>
-          <p className="text-xs text-gray-500 mt-1 line-clamp-2">{type.catchcopy.replace(/\*\*/g, '')}</p>
+          <p className="text-xs text-slate-500 mt-1 line-clamp-2">{type.catchcopy.replace(/\*\*/g, '')}</p>
         </div>
       </div>
     </button>
@@ -75,10 +75,10 @@ function TypeCategory({
   return (
     <div className="mb-6 animate-fade-in-up">
       <div className={`${colors.headerBg} rounded-t-2xl px-6 py-4`}>
-        <h3 className={`font-bold ${colors.headerText}`}>{title}</h3>
+                <h3 className="font-bold text-white">{title}</h3>
         <p className={`text-sm ${colors.accent}`}>{description}</p>
       </div>
-      <div className="bg-white rounded-b-2xl border border-t-0 border-gray-100 p-4">
+      <div className="bg-white rounded-b-2xl border border-t-0 border-slate-100 p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {types.map((type) => (
             <TypeCard
@@ -118,34 +118,34 @@ export function TopPage({ onStart }: TopPageProps) {
         <div className="max-w-2xl w-full text-center animate-fade-in">
           {/* ロゴ・タイトル */}
           <div className="mb-12">
-            <img 
-              src="/logo.png" 
-              alt="awareness=design" 
-              className="h-5 md:h-6 mx-auto mb-6 object-contain"
-            />
             <img
               src="/logo_facilitatorstyles.png"
               alt="FacilitatorStyles"
-              className="h-32 md:h-40 mx-auto mb-4 object-contain"
+              className="h-32 md:h-40 mx-auto mb-3 object-contain"
             />
-            <p className="text-lg text-gray-500">
+            <img 
+              src="/logo_powered_by_awareness_design.png" 
+              alt="Powered by awareness=design" 
+              className="h-4 md:h-5 mx-auto mb-6 object-contain opacity-75"
+            />
+            <p className="text-lg text-slate-500">
               ファシリテーター特性診断
             </p>
           </div>
 
           {/* 説明 */}
           <div className="card mb-10 text-left">
-            <h2 className="text-xl font-semibold mb-4 text-gray-800 text-center">
+            <h2 className="text-xl font-semibold mb-4 text-slate-800 text-center">
               あなたのファシリテーションスタイルを発見しよう
             </h2>
-            <p className="text-gray-600 mb-6 leading-relaxed">
+            <p className="text-slate-600 mb-6 leading-relaxed">
               32の質問に答えることで、あなたのファシリテーターとしての傾向が分かります。
               4つの軸であなたのスタイルを可視化し、強みや成長のヒントをお伝えします。
             </p>
 
             {/* Step1: 診断で測る4つの軸（軸色: 介入=赤, 知覚=緑, 判断=黄, 場の関わり=青） */}
-            <p className="text-sm font-medium text-gray-700 mb-3 text-center">診断で測定する4つの軸</p>
-            <p className="text-xs text-gray-600 leading-relaxed mb-4 text-center">
+            <p className="text-sm font-medium text-slate-700 mb-3 text-center">診断で測定する4つの軸</p>
+            <p className="text-xs text-slate-600 leading-relaxed mb-4 text-center">
               32問で以下の4つの軸を測定します。これらの組み合わせから16スタイルに判定されます。
             </p>
             <div className="grid grid-cols-2 gap-4 mb-6">
@@ -171,7 +171,7 @@ export function TopPage({ onStart }: TopPageProps) {
               </div>
             </div>
 
-            <p className="text-sm text-gray-400 text-center">
+            <p className="text-sm text-slate-400 text-center">
               所要時間：約5分
             </p>
           </div>
@@ -183,17 +183,17 @@ export function TopPage({ onStart }: TopPageProps) {
           >
             診断を始める
           </button>
-          <p className="mt-6 text-xs text-gray-600 text-center font-bold">
+          <p className="mt-6 text-xs text-slate-600 text-center font-bold">
             スタイルはあくまで得意としている傾向であり、どの視点もバランスよく持つことが重要だと考えています。
           </p>
-          <p className="mt-3 text-xs text-gray-400">
+          <p className="mt-3 text-xs text-slate-400">
             ※この診断は自己理解のためのツールです。結果は参考情報としてご活用ください。
           </p>
         </div>
       </div>
 
       {/* ファシリテーター16スタイル一覧セクション */}
-      <div className="section px-6 bg-gray-50">
+      <div className="section px-6 bg-slate-50">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="section-title">
@@ -213,8 +213,8 @@ export function TopPage({ onStart }: TopPageProps) {
                 </svg>
               </div>
               <div>
-                <h3 className="text-xl font-bold text-gray-800">触発型ファシリテーター</h3>
-                <p className="text-sm text-gray-500">場に積極的に働きかけ、エネルギーを引き出す</p>
+                <h3 className="text-xl font-bold text-slate-800">触発型ファシリテーター</h3>
+                <p className="text-sm text-slate-500">場に積極的に働きかけ、エネルギーを引き出す</p>
               </div>
             </div>
 
@@ -245,8 +245,8 @@ export function TopPage({ onStart }: TopPageProps) {
                 </svg>
               </div>
               <div>
-                <h3 className="text-xl font-bold text-gray-800">見守型ファシリテーター</h3>
-                <p className="text-sm text-gray-500">静かに見守り、参加者の主体性を引き出す</p>
+                <h3 className="text-xl font-bold text-slate-800">見守型ファシリテーター</h3>
+                <p className="text-sm text-slate-500">静かに見守り、参加者の主体性を引き出す</p>
               </div>
             </div>
 
@@ -275,10 +275,10 @@ export function TopPage({ onStart }: TopPageProps) {
             >
               診断を始める
             </button>
-            <p className="mt-6 text-xs text-gray-600 text-center font-bold">
+            <p className="mt-6 text-xs text-slate-600 text-center font-bold">
               スタイルはあくまで得意としている傾向であり、どの視点もバランスよく持つことが重要だと考えています。
             </p>
-            <p className="mt-3 text-xs text-gray-400">
+            <p className="mt-3 text-xs text-slate-400">
               ※この診断は自己理解のためのツールです。結果は参考情報としてご活用ください。
             </p>
           </div>
@@ -289,16 +289,16 @@ export function TopPage({ onStart }: TopPageProps) {
       <TypeDetailModal type={selectedType} onClose={() => setSelectedType(null)} />
 
       {/* フッター */}
-      <div className="px-6 py-8 text-center bg-white border-t border-gray-100">
+      <div className="px-6 py-8 text-center bg-white border-t border-slate-100">
         <a
           href="https://awareness-design.studio.site/"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-gray-600 no-underline hover:no-underline focus:no-underline"
+          className="text-slate-600 no-underline hover:no-underline focus:no-underline"
         >
           awareness=design
         </a>
-        <p className="mt-2 text-xs text-gray-400">
+        <p className="mt-2 text-xs text-slate-400">
           ファシリテーション研究を参考にした診断です。
         </p>
       </div>

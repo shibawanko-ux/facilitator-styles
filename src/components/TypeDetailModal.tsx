@@ -81,7 +81,7 @@ export function TypeDetailModal({ type, onClose }: TypeDetailModalProps) {
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-full text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors"
+            className="p-2 rounded-full text-slate-700 hover:bg-slate-200 hover:text-slate-900 transition-colors"
             aria-label="閉じる"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -92,7 +92,7 @@ export function TypeDetailModal({ type, onClose }: TypeDetailModalProps) {
 
         <div className="px-6 pb-8">
           {/* ヒーロー（青ヘッダー） */}
-          <div className="bg-primary-700 rounded-t-2xl px-6 pt-8 pb-8 mb-6 text-white text-center">
+          <div className="bg-primary-600 rounded-t-2xl px-6 pt-8 pb-8 mb-6 text-white text-center">
             <h2 id="type-detail-title" className="text-2xl md:text-3xl font-bold mb-3 mt-0">
               {type.name}
             </h2>
@@ -116,7 +116,7 @@ export function TypeDetailModal({ type, onClose }: TypeDetailModalProps) {
           {/* 詳細説明（モーダル用に「あなた」→「このタイプ」で事実説明の文体に変換） */}
           <div className="space-y-4 mb-6">
             {type.detailedDescription.map((paragraph, index) => (
-              <p key={index} className="text-gray-600 leading-relaxed text-sm">
+              <p key={index} className="text-slate-600 leading-relaxed text-sm">
                 <FormattedText text={toModalDescriptionText(paragraph)} as="span" />
               </p>
             ))}
@@ -124,7 +124,7 @@ export function TypeDetailModal({ type, onClose }: TypeDetailModalProps) {
 
           {/* ファシリテーション特性（型×グループ＋リード文＋4象限） */}
           <div className="mb-6">
-            <h3 className="text-center text-sm font-bold text-gray-600 mb-1">ファシリテーション特性</h3>
+            <h3 className="text-center text-sm font-bold text-slate-600 mb-1">ファシリテーション特性</h3>
             {/* 塊と同色：推進者=赤, 共感者=赤薄, 戦略家=青, 守護者=青薄 */}
             <p
               className={`text-center text-base md:text-lg font-bold mb-1 ${
@@ -146,7 +146,7 @@ export function TypeDetailModal({ type, onClose }: TypeDetailModalProps) {
                     ? '戦略家グループ'
                     : '守護者グループ'}
             </p>
-            <p className="text-center text-sm text-gray-600 mb-4">
+            <p className="text-center text-sm text-slate-600 mb-4">
               {type.intervention === 'trigger' && type.judgment === 'goal'
                 ? '場に積極的に働きかけ、エネルギーを引き出し、場を動かしながら、ゴールに向けて推進する'
                 : type.intervention === 'trigger' && type.judgment === 'relation'
@@ -155,7 +155,7 @@ export function TypeDetailModal({ type, onClose }: TypeDetailModalProps) {
                     ? '静かに見守り、参加者の主体性を引き出し、裏方として、確実にゴールへ導く'
                     : '静かに見守り、参加者の主体性を引き出し、安心感を与え、関係性を守り育てる'}
             </p>
-            <div className="grid grid-cols-2 border border-gray-300">
+            <div className="grid grid-cols-2 border border-slate-300">
               {(
                 [
                   { key: 'intervention' as const, q: q.intervention },
@@ -168,11 +168,11 @@ export function TypeDetailModal({ type, onClose }: TypeDetailModalProps) {
                 const borderClass =
                   key === 'intervention' ? 'border-b border-r' : key === 'perception' ? 'border-b' : key === 'judgment' ? 'border-r' : '';
                 return (
-                  <div key={key} className={`${borderClass} border-gray-300 ${c.bg} border-l-4 ${c.border} p-3`}>
+                  <div key={key} className={`${borderClass} border-slate-300 ${c.bg} border-l-4 ${c.border} p-3`}>
                     <div className={`text-sm font-semibold ${c.axisText} mb-2`}>
                       {cell.axisName}：<span className={`font-bold ${c.labelText}`}>{cell.typeLabel}</span>
                     </div>
-                    <ul className="text-xs text-gray-600 space-y-0.5 list-none break-words">
+                    <ul className="text-xs text-slate-600 space-y-0.5 list-none break-words">
                       {cell.keywords.map((kw, i) => (
                         <li key={i}>・{kw}</li>
                       ))}

@@ -39,10 +39,10 @@ export function QuestionPage({
       {/* ヘッダー・プログレス */}
       <div className="max-w-2xl w-full mx-auto mb-10">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-sm text-gray-400 font-medium">
+          <span className="text-sm text-slate-400 font-medium">
             質問 {currentIndex + 1} / {totalQuestions}
           </span>
-          <span className="text-sm text-gray-400 font-medium">
+          <span className="text-sm text-slate-400 font-medium">
             {progress}%
           </span>
         </div>
@@ -58,7 +58,7 @@ export function QuestionPage({
       <div className="flex-1 flex flex-col items-center justify-center max-w-2xl mx-auto w-full animate-fade-in">
         <div className="card w-full mb-10">
           {/* 質問文 */}
-          <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-10 text-center leading-relaxed">
+          <h2 className="text-xl md:text-2xl font-semibold text-slate-800 mb-10 text-center leading-relaxed">
             {question.text}
           </h2>
 
@@ -68,13 +68,13 @@ export function QuestionPage({
               <span className="inline-block px-3 py-1 bg-slate-100 text-slate-700 rounded-full font-medium text-xs mb-2">
                 A
               </span>
-              <p className="text-gray-600">{question.optionA}</p>
+              <p className="text-slate-600">{question.optionA}</p>
             </div>
             <div className="flex-1 text-right">
               <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-medium text-xs mb-2">
                 B
               </span>
-              <p className="text-gray-600">{question.optionB}</p>
+              <p className="text-slate-600">{question.optionB}</p>
             </div>
           </div>
 
@@ -91,8 +91,8 @@ export function QuestionPage({
                       w-11 h-11 md:w-12 md:h-12 rounded-full font-semibold text-base
                       transition-all duration-300 transform
                       ${currentAnswer?.score === score
-                        ? 'bg-primary-700 text-white scale-110'
-                        : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:scale-105'
+                        ? 'bg-primary-600 text-white scale-105'
+                        : 'bg-slate-100 text-slate-500 hover:bg-slate-200 hover:scale-[1.02]'
                       }
                     `}
                   >
@@ -101,7 +101,7 @@ export function QuestionPage({
                 ))}
               </div>
               {/* 境界線（3と4の間） */}
-              <div className="w-px h-12 md:h-14 bg-gray-200 mx-1 shrink-0" aria-hidden="true" />
+              <div className="w-px h-12 md:h-14 bg-slate-200 mx-1 shrink-0" aria-hidden="true" />
               {/* B側: 4〜6 */}
               <div className="flex gap-2 md:gap-3">
                 {scaleLabels.filter((s) => s.score >= 4).map(({ score }) => (
@@ -112,8 +112,8 @@ export function QuestionPage({
                       w-11 h-11 md:w-12 md:h-12 rounded-full font-semibold text-base
                       transition-all duration-300 transform
                       ${currentAnswer?.score === score
-                        ? 'bg-primary-700 text-white scale-110'
-                        : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:scale-105'
+                        ? 'bg-primary-600 text-white scale-105'
+                        : 'bg-slate-100 text-slate-500 hover:bg-slate-200 hover:scale-[1.02]'
                       }
                     `}
                   >
@@ -123,11 +123,11 @@ export function QuestionPage({
               </div>
             </div>
             {/* 線の下：記号のみ（←＝A側・→＝B側・｜＝境目） */}
-            <p className="text-base text-gray-400 mb-3 tracking-wider" aria-hidden="true">
+            <p className="text-base text-slate-400 mb-3 tracking-wider" aria-hidden="true">
               ←｜→
             </p>
             {/* スケールラベル（左寄せ・右寄せで中央に見えないようにする） */}
-            <div className="flex justify-between w-full text-xs text-gray-400 px-1">
+            <div className="flex justify-between w-full text-xs text-slate-400 px-1">
               <span className="text-left">とてもA</span>
               <span className="text-right">とてもB</span>
             </div>
@@ -142,8 +142,8 @@ export function QuestionPage({
             className={`
               flex-1 py-4 rounded-full font-medium transition-all duration-300
               ${currentIndex === 0
-                ? 'bg-gray-100 text-gray-300 cursor-not-allowed'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:scale-105'
+                ? 'bg-slate-100 text-slate-300 cursor-not-allowed'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:scale-[1.02]'
               }
             `}
           >
@@ -155,8 +155,8 @@ export function QuestionPage({
             className={`
               flex-1 py-4 rounded-full font-medium transition-all duration-300
               ${!currentAnswer
-                ? 'bg-gray-100 text-gray-300 cursor-not-allowed'
-                : 'bg-primary-700 text-white hover:bg-primary-800 hover:scale-105'
+                ? 'bg-slate-100 text-slate-300 cursor-not-allowed'
+                : 'bg-primary-600 text-white hover:bg-primary-700 hover:scale-[1.02]'
               }
             `}
           >
@@ -166,12 +166,12 @@ export function QuestionPage({
       </div>
 
       {/* フッター */}
-      <div className="mt-auto px-6 py-6 text-center border-t border-gray-100">
+      <div className="mt-auto px-6 py-6 text-center border-t border-slate-100">
         <a
           href="https://awareness-design.studio.site/"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-gray-600 no-underline hover:no-underline focus:no-underline"
+          className="text-slate-600 no-underline hover:no-underline focus:no-underline"
         >
           awareness=design
         </a>

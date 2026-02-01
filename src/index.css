@@ -4,40 +4,47 @@
 
 @layer base {
   html {
-    font-family: 'Noto Sans JP', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+    font-family: 'M PLUS Rounded 1c', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
     scroll-behavior: smooth;
     letter-spacing: 0.02em;
   }
   
   body {
-    @apply bg-white text-gray-800 antialiased;
+    @apply bg-white text-slate-800 antialiased;
+    line-height: 1.75;
+  }
+  
+  /* 見出しは太め（700）で余白を多めに */
+  h1, h2, h3, h4 {
+    @apply font-bold tracking-wide;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply px-8 py-4 bg-primary-700 text-white rounded-full font-medium 
-           hover:bg-primary-800 hover:scale-105
+    @apply px-8 py-4 bg-primary-600 text-white rounded-full font-medium
+           hover:bg-primary-700 hover:scale-[1.02]
            transition-all duration-300 ease-out
-           focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2;
+           focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2
+           shadow-sm hover:shadow-md;
   }
   
   .btn-secondary {
-    @apply px-8 py-4 bg-gray-100 text-gray-700 rounded-full font-medium 
-           hover:bg-gray-200 hover:scale-105
+    @apply px-8 py-4 bg-slate-100 text-slate-700 rounded-full font-medium
+           hover:bg-slate-200 hover:scale-[1.02]
            transition-all duration-300 ease-out
-           focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2;
+           focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-2;
   }
   
   .card {
-    @apply bg-white rounded-2xl border border-gray-100 p-8
-           hover:border-gray-200 hover:shadow-sm
+    @apply bg-white rounded-2xl border border-slate-100 p-8
+           hover:border-slate-200 hover:shadow-sm
            transition-all duration-300 ease-out;
   }
   
   .card-interactive {
-    @apply bg-white rounded-2xl border border-gray-100 p-6
-           hover:border-gray-200 hover:shadow-md hover:-translate-y-1
+    @apply bg-white rounded-2xl border border-slate-100 p-6
+           hover:border-slate-200 hover:shadow-md hover:-translate-y-0.5
            transition-all duration-300 ease-out cursor-pointer;
   }
   
@@ -46,15 +53,15 @@
   }
   
   .section-title {
-    @apply text-2xl md:text-3xl font-bold text-gray-900 tracking-tight;
+    @apply text-2xl md:text-3xl font-bold text-slate-900 tracking-wide;
   }
   
   .section-subtitle {
-    @apply text-gray-500 mt-2;
+    @apply text-slate-500 mt-2;
   }
   
   .score-bar {
-    @apply h-2 rounded-full bg-gray-100 overflow-hidden;
+    @apply h-2 rounded-full bg-slate-100 overflow-hidden;
   }
   
   .score-bar-fill {
