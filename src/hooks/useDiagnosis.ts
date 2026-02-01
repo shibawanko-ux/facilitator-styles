@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { Answer, DiagnosisResult, Question } from '../data/types';
 import { questions, shuffleQuestions } from '../data/questions';
 import { generateDiagnosisResult } from '../utils/scoring';
@@ -11,6 +11,10 @@ export function useDiagnosis() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>([]);
   const [result, setResult] = useState<DiagnosisResult | null>(null);
+  const answersRef = useRef<Answer[]>(answers);
+  useEffect(() => {
+    answersRef.current = answers;
+  }, [answers]);
 
   // 診断を開始
   const startDiagnosis = useCallback(() => {
@@ -52,12 +56,13 @@ export function useDiagnosis() {
     if (currentQuestionIndex < shuffledQuestions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
     } else {
-      // 全質問に回答したら結果を計算
-      const diagnosisResult = generateDiagnosisResult(answers);
-      setResult(diagnosisResult);
+      // 全質問に回答したら結果を計算（refで最新のanswersを参照し、非同期stateの遅れを防ぐ）
+      const latestAnswers = answersRef.current;
+      const diagnosisResult = generateDiagnosisResult(latestAnswers);
+      setResult(diagnosisResult ?? null);
       setStep('result');
     }
-  }, [currentQuestionIndex, shuffledQuestions.length, answers]);
+  }, [currentQuestionIndex, shuffledQuestions.length]);
 
   // 前の質問へ
   const prevQuestion = useCallback(() => {

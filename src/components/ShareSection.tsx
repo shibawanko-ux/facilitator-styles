@@ -10,21 +10,99 @@ export function ShareSection({ result, resultRef }: ShareSectionProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [shareImageUrl, setShareImageUrl] = useState<string | null>(null);
 
-  // シェアテキストを生成（** は除去）
-  const plainCatchcopy = result.type.catchcopy.replace(/\*\*/g, '');
-  const shareText = `ファシリスタイル診断の結果、私は「${result.type.name}」タイプでした！ ${plainCatchcopy}`;
+  // シェア用URL（本番・ローカルどちらでも現在のオリジンを使用）
   const shareUrl = typeof window !== 'undefined' ? window.location.origin : '';
 
-  // 画像を生成
+  // シェアテキストを生成（09_sns_share_requirements.md に準拠）
+  // 診断結果＋誘導文＋awareness=design 告知＋ハッシュタグ
+  const plainCatchcopy = result.type.catchcopy.replace(/\*\*/g, '');
+  const shareTextFull = [
+    `ファシリスタイル診断の結果、私は「${result.type.name}」スタイルでした！ ${plainCatchcopy}`,
+    '',
+    `あなたも診断してみて 👉 ${shareUrl}`,
+    'ファシリスタイル診断 by awareness=design',
+    '#ファシリスタイル #awarenessdesign',
+  ].join('\n');
+
+  // X(Twitter)用：URLは intent の url パラメータで渡すため、本文には含めない
+  const shareTextForTwitter = [
+    `ファシリスタイル診断の結果、私は「${result.type.name}」スタイルでした！ ${plainCatchcopy}`,
+    '',
+    'あなたも診断してみて 👉',
+    '#ファシリスタイル #awarenessdesign',
+  ].join('\n');
+
+  // 画像を生成（html2canvas のクローンで背景色が抜けるため onclone でインライン指定）
   const generateImage = useCallback(async () => {
     if (!resultRef.current) return;
-    
+
+    const FORCE_BG = {
+      'bg-primary-700': '#334155',
+      'bg-white': '#ffffff',
+      'bg-gray-50': '#f9fafb',
+      'bg-gray-100': '#f3f4f6',
+      'bg-red-50': '#fef2f2',
+      'bg-emerald-50': '#ecfdf5',
+      'bg-amber-50': '#fffbeb',
+      'bg-sky-50': '#f0f9ff',
+    } as const;
+
     setIsGenerating(true);
     try {
       const html2canvas = (await import('html2canvas')).default;
       const canvas = await html2canvas(resultRef.current, {
         backgroundColor: '#ffffff',
-        scale: 2,
+        scale: 3,
+        useCORS: true,
+        logging: false,
+        onclone: (_doc, clone) => {
+          const root = clone as HTMLElement;
+          root.style.backgroundColor = '#ffffff';
+          root.style.opacity = '1';
+
+          (Object.keys(FORCE_BG) as (keyof typeof FORCE_BG)[]).forEach((cls) => {
+            clone.querySelectorAll(`[class*="${cls}"]`).forEach((el) => {
+              const h = el as HTMLElement;
+              h.style.backgroundColor = FORCE_BG[cls];
+              h.style.opacity = '1';
+            });
+          });
+
+          const header = clone.querySelector('[class*="bg-primary-700"]') as HTMLElement | null;
+          if (header) {
+            header.style.backgroundColor = '#334155';
+            header.style.opacity = '1';
+            header.querySelectorAll('[class*="text-white"]').forEach((el) => {
+              (el as HTMLElement).style.color = '#ffffff';
+            });
+            header.querySelectorAll('[class*="text-primary-200"]').forEach((el) => {
+              (el as HTMLElement).style.color = '#e2e8f0';
+            });
+            // 型ピル（4軸タグ）：背景・文字色・角丸を明示して崩れを防ぐ
+            header.querySelectorAll('[class*="bg-gray-100"]').forEach((el) => {
+              const pill = el as HTMLElement;
+              pill.style.backgroundColor = '#f3f4f6';
+              pill.style.color = '#374151';
+              pill.style.borderRadius = '9999px';
+              pill.style.border = '1px solid #e5e7eb';
+              pill.style.opacity = '1';
+            });
+          }
+
+          // カード・説明エリアの背景を確実に
+          clone.querySelectorAll('.card, [class*="space-y-4"]').forEach((el) => {
+            (el as HTMLElement).style.backgroundColor = '#ffffff';
+            (el as HTMLElement).style.opacity = '1';
+          });
+
+          // 画像用フッターロゴ（画面上は hidden）：クローン内で表示してキャプチャに含める
+          const footerLogo = clone.querySelector('.image-only-footer') as HTMLElement | null;
+          if (footerLogo) {
+            footerLogo.style.display = 'block';
+            footerLogo.style.visibility = 'visible';
+            footerLogo.style.backgroundColor = '#ffffff';
+          }
+        },
       });
       const dataUrl = canvas.toDataURL('image/png');
       setShareImageUrl(dataUrl);
@@ -46,33 +124,33 @@ export function ShareSection({ result, resultRef }: ShareSectionProps) {
     link.click();
   }, [shareImageUrl, result.type.id]);
 
-  // X/Twitterでシェア
+  // X(Twitter)でシェア（URLは別パラメータで渡す）
   const shareOnTwitter = useCallback(() => {
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareTextForTwitter)}&url=${encodeURIComponent(shareUrl)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
-  }, [shareText, shareUrl]);
+  }, [shareTextForTwitter, shareUrl]);
 
-  // Facebookでシェア
+  // Facebookでシェア（全文＋URL）
   const shareOnFacebook = useCallback(() => {
-    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
+    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareTextFull)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
-  }, [shareText, shareUrl]);
+  }, [shareTextFull, shareUrl]);
 
-  // LINEでシェア
+  // LINEでシェア（全文＋URL）
   const shareOnLine = useCallback(() => {
-    const url = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+    const url = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTextFull)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
-  }, [shareText, shareUrl]);
+  }, [shareTextFull, shareUrl]);
 
-  // クリップボードにコピー
+  // クリップボードにコピー（告知・URL・ハッシュタグ含む全文）
   const copyToClipboard = useCallback(async () => {
     try {
-      await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+      await navigator.clipboard.writeText(shareTextFull);
       alert('クリップボードにコピーしました！');
     } catch {
       alert('コピーに失敗しました');
     }
-  }, [shareText, shareUrl]);
+  }, [shareTextFull]);
 
   return (
     <div>

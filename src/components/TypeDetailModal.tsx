@@ -122,9 +122,39 @@ export function TypeDetailModal({ type, onClose }: TypeDetailModalProps) {
             ))}
           </div>
 
-          {/* ファシリテーション特性（4象限） */}
+          {/* ファシリテーション特性（型×グループ＋リード文＋4象限） */}
           <div className="mb-6">
-            <h3 className="text-center text-sm font-bold text-primary-800 mb-3">ファシリテーション特性</h3>
+            <h3 className="text-center text-sm font-bold text-gray-600 mb-1">ファシリテーション特性</h3>
+            {/* 塊と同色：推進者=赤, 共感者=赤薄, 戦略家=青, 守護者=青薄 */}
+            <p
+              className={`text-center text-base md:text-lg font-bold mb-1 ${
+                type.intervention === 'trigger' && type.judgment === 'goal'
+                  ? 'text-red-900'
+                  : type.intervention === 'trigger' && type.judgment === 'relation'
+                    ? 'text-red-800'
+                    : type.intervention === 'watch' && type.judgment === 'goal'
+                      ? 'text-[#1F86C8]'
+                      : 'text-[#38a5d8]'
+              }`}
+            >
+              {type.intervention === 'trigger' ? '触発型ファシリテーター' : '見守型ファシリテーター'} ×{' '}
+              {type.intervention === 'trigger' && type.judgment === 'goal'
+                ? '推進者グループ'
+                : type.intervention === 'trigger' && type.judgment === 'relation'
+                  ? '共感者グループ'
+                  : type.intervention === 'watch' && type.judgment === 'goal'
+                    ? '戦略家グループ'
+                    : '守護者グループ'}
+            </p>
+            <p className="text-center text-sm text-gray-600 mb-4">
+              {type.intervention === 'trigger' && type.judgment === 'goal'
+                ? '場に積極的に働きかけ、エネルギーを引き出し、場を動かしながら、ゴールに向けて推進する'
+                : type.intervention === 'trigger' && type.judgment === 'relation'
+                  ? '場に積極的に働きかけ、エネルギーを引き出し、場を盛り上げながら、関係性を育てる'
+                  : type.intervention === 'watch' && type.judgment === 'goal'
+                    ? '静かに見守り、参加者の主体性を引き出し、裏方として、確実にゴールへ導く'
+                    : '静かに見守り、参加者の主体性を引き出し、安心感を与え、関係性を守り育てる'}
+            </p>
             <div className="grid grid-cols-2 border border-gray-300">
               {(
                 [

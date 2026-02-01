@@ -22,7 +22,7 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
   return (
     <div className="min-h-screen bg-white py-12 px-6">
       <div className="max-w-3xl mx-auto">
-        {/* ロゴ（TOPページと同様） */}
+        {/* ロゴ（結果画面のヘッダーとして表示） */}
         <div className="text-center mb-4">
           <img
             src="/logo.png"
@@ -30,11 +30,13 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
             className="h-8 md:h-10 mx-auto object-contain"
           />
         </div>
-        {/* ヒーローセクション：タイプ概要 */}
-        <div ref={resultRef} className="card mb-10 animate-fade-in">
+        {/* 画像生成用：結果カード＋ロゴ（フッター）をまとめてキャプチャ */}
+        <div ref={resultRef} className="bg-white rounded-2xl">
+          {/* ヒーローセクション：タイプ概要 */}
+          <div className="card mb-0 animate-fade-in">
           {/* ヘッダー */}
           <div className="bg-primary-700 -mx-8 -mt-8 px-8 py-10 mb-8 rounded-t-2xl text-white text-center">
-            <p className="text-sm text-primary-200 mb-2">あなたのファシリテータータイプは...</p>
+            <p className="text-sm text-primary-200 mb-2">あなたのファシリテータースタイルは...</p>
             <h1 className="text-3xl md:text-4xl font-bold mb-3">
               {result.type.name}
             </h1>
@@ -116,9 +118,46 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
                 </div>
               );
             };
+            // 型の階層：介入スタイル×グループ
+            const interventionLabel =
+              result.type.intervention === 'trigger' ? '触発型ファシリテーター' : '見守型ファシリテーター';
+            const groupLabel =
+              result.type.intervention === 'trigger' && result.type.judgment === 'goal'
+                ? '推進者グループ'
+                : result.type.intervention === 'trigger' && result.type.judgment === 'relation'
+                  ? '共感者グループ'
+                  : result.type.intervention === 'watch' && result.type.judgment === 'goal'
+                    ? '戦略家グループ'
+                    : '守護者グループ';
+            // 塊と同じフォント色：推進者=赤, 共感者=赤薄, 戦略家=青, 守護者=青薄
+            const subtitleColorClass =
+              result.type.intervention === 'trigger' && result.type.judgment === 'goal'
+                ? 'text-red-900'
+                : result.type.intervention === 'trigger' && result.type.judgment === 'relation'
+                  ? 'text-red-800'
+                  : result.type.intervention === 'watch' && result.type.judgment === 'goal'
+                    ? 'text-[#1F86C8]'
+                    : 'text-[#38a5d8]';
+            // リード文：介入スタイル＋グループの説明を組み合わせ
+            const leadText =
+              result.type.intervention === 'trigger' && result.type.judgment === 'goal'
+                ? '場に積極的に働きかけ、エネルギーを引き出し、場を動かしながら、ゴールに向けて推進する'
+                : result.type.intervention === 'trigger' && result.type.judgment === 'relation'
+                  ? '場に積極的に働きかけ、エネルギーを引き出し、場を盛り上げながら、関係性を育てる'
+                  : result.type.intervention === 'watch' && result.type.judgment === 'goal'
+                    ? '静かに見守り、参加者の主体性を引き出し、裏方として、確実にゴールへ導く'
+                    : '静かに見守り、参加者の主体性を引き出し、安心感を与え、関係性を守り育てる';
+
             return (
               <div className="mb-8 max-w-2xl mx-auto">
-                <h3 className="text-center text-sm font-bold text-primary-800 mb-3">あなたのファシリテーション特性</h3>
+                {/* タイトル（小さく） */}
+                <h3 className="text-center text-sm font-bold text-gray-600 mb-1">あなたのファシリテーション特性</h3>
+                {/* サブタイトル：型×グループ（塊と同色） */}
+                <p className={`text-center text-base md:text-lg font-bold mb-1 ${subtitleColorClass}`}>
+                  {interventionLabel} × {groupLabel}
+                </p>
+                {/* リード文 */}
+                <p className="text-center text-sm text-gray-600 mb-4">{leadText}</p>
                 {/* 4象限：2×2グリッド・軸色・罫線 */}
                 <div className="grid grid-cols-2 border border-gray-300">
                   <div className="border-b border-r border-gray-300">
@@ -151,6 +190,15 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
                 </span>
               ))}
             </div>
+          </div>
+        </div>
+          {/* ロゴ（画像生成時のみフッターに表示・画面上は非表示） */}
+          <div className="image-only-footer hidden text-center py-6 pt-4 bg-white">
+            <img
+              src="/logo.png"
+              alt="awareness=design"
+              className="h-8 md:h-10 mx-auto object-contain"
+            />
           </div>
         </div>
 
@@ -269,7 +317,7 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
           />
         </div>
 
-        {/* 他のタイプとの相性（独立項目・4-C） */}
+        {/* 他のスタイルとの相性（独立項目・4-C） */}
         {(() => {
           const compatibility = getTypeCompatibility(result.type.id);
           if (!compatibility || (compatibility.good.length === 0 && compatibility.difficult.length === 0)) return null;
@@ -282,14 +330,14 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
                   </svg>
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-800">他のタイプとの相性</h2>
-                  <p className="text-sm text-gray-500">相性が良いタイプ・難しいタイプと振る舞いのヒント</p>
+                  <h2 className="text-xl font-semibold text-gray-800">他のスタイルとの相性</h2>
+                  <p className="text-sm text-gray-500">相性が良いスタイル・難しいスタイルと振る舞いのヒント</p>
                 </div>
               </div>
               <div className="space-y-6">
                 {compatibility.good.length > 0 && (
                   <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-                    <h3 className="text-sm font-semibold text-emerald-800 mb-4">相性が良いタイプ</h3>
+                    <h3 className="text-sm font-semibold text-emerald-800 mb-4">相性が良いスタイル</h3>
                     <div className="space-y-4">
                       {compatibility.good.map((item: CompatibilityItem) => (
                         <button
