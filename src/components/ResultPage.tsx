@@ -337,10 +337,17 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
                           key={item.typeId}
                           type="button"
                           onClick={() => setSelectedCompatType(getFacilitatorTypeById(item.typeId) ?? null)}
-                          className="w-full text-left p-3 bg-white rounded-xl border border-emerald-100 hover:border-emerald-200 hover:shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1"
+                          className="w-full text-left p-3 bg-white rounded-xl border border-emerald-100 hover:border-emerald-200 hover:shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1 flex items-start gap-3"
                         >
-                          <p className="font-bold text-emerald-800 text-base">{item.typeName}</p>
-                          <p className="text-sm text-slate-600 mt-1 leading-relaxed">{item.hint}</p>
+                          {/* 将来的なイラスト用スペース（枠のみ確保） */}
+                          <div
+                            className="w-14 h-14 flex-shrink-0 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50/80 flex items-center justify-center"
+                            aria-hidden="true"
+                          />
+                          <div className="min-w-0 flex-1">
+                            <p className="font-bold text-emerald-800 text-base">{item.typeName}</p>
+                            <p className="text-sm text-slate-600 mt-1 leading-relaxed">{item.hint}</p>
+                          </div>
                         </button>
                       ))}
                     </div>
@@ -355,10 +362,17 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
                           key={item.typeId}
                           type="button"
                           onClick={() => setSelectedCompatType(getFacilitatorTypeById(item.typeId) ?? null)}
-                          className="w-full text-left p-3 bg-white rounded-xl border border-amber-100 hover:border-amber-200 hover:shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1"
+                          className="w-full text-left p-3 bg-white rounded-xl border border-amber-100 hover:border-amber-200 hover:shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1 flex items-start gap-3"
                         >
-                          <p className="font-bold text-amber-800 text-base">{item.typeName}</p>
-                          <p className="text-sm text-slate-600 mt-1 leading-relaxed">{item.hint}</p>
+                          {/* 将来的なイラスト用スペース（枠のみ確保） */}
+                          <div
+                            className="w-14 h-14 flex-shrink-0 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50/80 flex items-center justify-center"
+                            aria-hidden="true"
+                          />
+                          <div className="min-w-0 flex-1">
+                            <p className="font-bold text-amber-800 text-base">{item.typeName}</p>
+                            <p className="text-sm text-slate-600 mt-1 leading-relaxed">{item.hint}</p>
+                          </div>
                         </button>
                       ))}
                     </div>
