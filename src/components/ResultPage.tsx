@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { DiagnosisResult, FacilitatorType } from '../data/types';
 import { ScoreChart } from './ScoreChart';
 import { CofaciliSection } from './CofaciliSection';
@@ -16,22 +16,23 @@ interface ResultPageProps {
 }
 
 export function ResultPage({ result, onRestart }: ResultPageProps) {
-  const resultRef = useRef<HTMLDivElement>(null);
   const [selectedCompatType, setSelectedCompatType] = useState<FacilitatorType | null>(null);
 
   return (
-    <div className="min-h-screen bg-white py-12 px-6">
-      <div className="max-w-3xl mx-auto">
-        {/* ロゴ（結果画面のヘッダーとして表示） */}
-        <div className="text-center mb-4">
-          <img
-            src="/logo.png"
-            alt="awareness=design"
-            className="h-8 md:h-10 mx-auto object-contain"
-          />
-        </div>
-        {/* 画像生成用：結果カード＋ロゴ（フッター）をまとめてキャプチャ */}
-        <div ref={resultRef} className="bg-white rounded-2xl">
+    <div className="min-h-screen flex flex-col bg-slate-50">
+      <div className="flex-1 flex flex-col max-w-3xl w-full mx-auto py-12 px-6">
+        {/* ヘッダー：ロゴ（TOP・質問画面と統一・次の要素との隙間は控えめ） */}
+        <section className="text-center mb-4" aria-label="結果のヘッダー">
+          <div className="mb-2">
+            <img
+              src="/logo.png"
+              alt="awareness=design"
+              className="h-8 md:h-10 mx-auto object-contain"
+            />
+          </div>
+        </section>
+        {/* 結果カード（ヒーロー・詳細・傾向キーワード・得意な場面） */}
+        <section className="bg-white rounded-2xl shadow-sm border border-slate-200 mb-8" aria-label="診断結果">
           {/* ヒーローセクション：タイプ概要 */}
           <div className="card mb-0 animate-fade-in">
           {/* ヘッダー */}
@@ -192,15 +193,7 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
             </div>
           </div>
         </div>
-          {/* ロゴ（画像生成時のみフッターに表示・画面上は非表示） */}
-          <div className="image-only-footer hidden text-center py-6 pt-4 bg-white">
-            <img
-              src="/logo.png"
-              alt="awareness=design"
-              className="h-8 md:h-10 mx-auto object-contain"
-            />
-          </div>
-        </div>
+        </section>
 
         {/* ファシリテーター特性セクション：4軸のスコア */}
         <div className="card mb-10 animate-fade-in-up">
@@ -382,8 +375,8 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
           onClose={() => setSelectedCompatType(null)}
         />
 
-        {/* シェア・保存セクション */}
-        <div className="card mb-10">
+        {/* シェア・保存セクション（09_sns_share_requirements 準拠） */}
+        <section id="share-section" className="card mb-10" aria-label="結果をシェア・保存">
           <div className="flex items-center gap-4 mb-8">
             <div className="icon-square bg-rose-100">
               <svg className="w-5 h-5 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -395,31 +388,60 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
               <p className="text-sm text-slate-500">SNSでシェアまたは画像で保存</p>
             </div>
           </div>
-          <ShareSection result={result} resultRef={resultRef} />
-        </div>
+          <ShareSection result={result} />
+        </section>
 
-        {/* もう一度診断する */}
-        <div className="text-center">
-          <button
-            onClick={onRestart}
-            className="btn-secondary"
-          >
-            もう一度診断する
-          </button>
-        </div>
-
-        {/* フッター */}
-        <div className="mt-12 px-6 py-8 text-center bg-white border-t border-slate-100">
+        {/* awareness=design 導線カード（TOP と同内容・シェアとの隙間は他セクション同様 mb-10 のみ） */}
+        <div className="w-full">
           <a
             href="https://awareness-design.studio.site/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-slate-600 no-underline hover:no-underline focus:no-underline"
+            className="w-full flex flex-col sm:flex-row items-stretch sm:items-center gap-4 p-5 rounded-2xl border border-slate-200 bg-white shadow-sm hover:border-slate-300 hover:shadow-md transition-all duration-300 text-left no-underline focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+            aria-label="awareness=design のサイトへ"
           >
-            awareness=design
+            <div className="min-w-0 flex-1">
+              <h3 className="font-bold text-slate-800 text-lg">awareness=design</h3>
+              <p className="text-sm text-slate-600 mt-1 leading-relaxed">
+                awareness=designは、対話を通じて、チームや家族といった身近な関係性に気づきと変化が生まれる場をデザインしています。
+              </p>
+              <p className="text-xs text-slate-500 mt-1 font-medium">awareness-design.studio.site</p>
+            </div>
+            <div className="flex-shrink-0 flex items-center justify-center">
+              <img
+                src="/awareness_design_sc.png"
+                alt="awareness=design"
+                className="h-20 sm:h-24 w-auto object-contain"
+              />
+            </div>
           </a>
         </div>
+
+        {/* もう一度診断する（視認性のためプライマリ・やや大きめ） */}
+        <div className="text-center mt-10">
+          <button
+            onClick={onRestart}
+            className="btn-primary text-lg font-bold py-5 px-10"
+          >
+            もう一度診断する
+          </button>
+        </div>
       </div>
+
+      {/* フッター（TOP・Question と統一・全幅） */}
+      <footer className="mt-auto px-6 py-10 text-center bg-white border-t border-slate-200">
+        <a
+          href="https://awareness-design.studio.site/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-slate-600 no-underline hover:no-underline focus:no-underline"
+        >
+          awareness=design
+        </a>
+        <p className="mt-2 text-xs text-slate-400">
+          ファシリテーション研究を参考にした診断です。
+        </p>
+      </footer>
     </div>
   );
 }

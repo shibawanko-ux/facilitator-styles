@@ -205,6 +205,8 @@
 
 #### トップページ
 
+TOP画面の実装・クラスレベル仕様は [14_top_page_spec.md](14_top_page_spec.md) を参照。
+
 **ヒーローセクション**
 - awareness=designロゴ画像
 - アプリ名「ファシリスタイル」
@@ -244,6 +246,8 @@
 - フェードインアニメーション
 
 #### 結果画面
+
+結果画面のシェア・レイアウト方針（LINE削除・画像提供なし・Facebookクリップボード等）は [15_user_test_improvement_requirements.md](15_user_test_improvement_requirements.md) 6. 結果画面の改善要件 を参照。
 
 **セクション1: あなたのスタイル**（採用: 1-A）
 
@@ -297,9 +301,10 @@
 
 **セクション7: シェア・保存**
 
-- SNSシェアボタン（X/Twitter, Facebook, LINE）
-- 結果画像ダウンロードボタン
-- **SNS投稿内容の要件定義**: 投稿文・結果サマリ・画像・awareness=design 告知・拡散方針の詳細は [09_sns_share_requirements.md](09_sns_share_requirements.md) を参照
+- SNSシェアボタン（X/Twitter, Facebook）のみ。LINE シェアは提供しない（[15_user_test_improvement_requirements.md](15_user_test_improvement_requirements.md) R-SHARE-LINE-01）。
+- Facebook シェア時は、結果テキストをクリップボードにコピーし「投稿欄に貼り付けて投稿してください」と案内する（R-SHARE-FB-01 案C）。
+- 結果画像の生成・ダウンロード機能は提供しない（R-IMG-GEN-01）。
+- **SNS投稿内容の要件定義**: 投稿文・結果サマリ・awareness=design 告知・拡散方針の詳細は [09_sns_share_requirements.md](09_sns_share_requirements.md) を参照。
 
 ---
 
@@ -334,9 +339,10 @@
 
 - **フロントエンド**: React 18 + Vite 5 + TypeScript
 - **スタイリング**: Tailwind CSS 3
-- **画像生成**: html2canvas（結果画像保存用）
 - **ホスティング**: Vercel
 - **アクセス解析**: Google Analytics（want要件）
+
+※結果画像の生成・保存は提供しない（15 ユーザーテスト改善 R-IMG-GEN-01 に基づく）。
 
 ---
 
@@ -366,8 +372,7 @@
 
 - ✅ 診断機能（32問）
 - ✅ 結果表示（タイプ名、4軸タグ、4軸スコア・％、強み弱み、ファシリテーターとしての影響力、コーファシリ要約・相性）
-- ✅ SNSシェア機能
-- ✅ 結果画像保存機能
+- ✅ SNSシェア機能（X / Facebook。LINE は提供しない。Facebook はクリップボード案内）
 - ✅ レスポンシブ対応
 - ✅ 16タイプ一覧ページ
 
@@ -402,7 +407,8 @@ app_Facilitator_type_diagnosis/
 │   ├── 11_result_page_usertest_proposal.md  # 結果ページ・ユーザーテスト修正提案
 │   ├── 12_analysis_consistency_check.md     # 分析結果・エンジニアリングロジック整合性確認レポート
 │   ├── 13_design_direction.md               # デザイン方針（ロゴ連動）
-│   └── 14_top_page_spec.md                  # TOP画面仕様書
+│   ├── 14_top_page_spec.md                  # TOP画面仕様書（実装・クラスレベル詳細）
+│   └── 15_user_test_improvement_requirements.md  # ユーザーテスト改善要件（TOP/回答/結果・シェア方針）
 ├── src/                         # ソースコード
 │   ├── components/              # UIコンポーネント
 │   │   ├── TopPage.tsx          # トップページ（4軸カード・ファシリテーター16スタイル一覧・モーダル）
@@ -458,7 +464,7 @@ app_Facilitator_type_diagnosis/
 3. ✅ 質問画面の実装
 4. ✅ スコアリングロジックの実装
 5. ✅ 結果画面の実装（詳細説明・カード形式の強み弱み）
-6. ✅ シェア・画像保存機能の実装
+6. ✅ シェア機能の実装（X/Facebook。画像生成・保存は提供しない）
 7. ✅ レスポンシブ対応
 8. ✅ デザインリニューアル（ミニマル・フラットスタイル）
 
@@ -533,3 +539,5 @@ npm run build
 | 2026-01-25 | 整合性確認：12_analysis_consistency_check.md 追加。useDiagnosis で最終質問回答後の結果生成時に answersRef で最新回答を参照するよう修正（32件で正しく計算）。 |
 | 2026-01-25 | デザイン方針（ロゴ連動）を要件定義：13_design_direction.md 新規作成。ロゴの丸み・ライトブルー＋グレーに合わせたタイポグラフィ・色・形・余白・アニメーションの方向性を定義。4.2 に要約と参照を追加。 |
 | 2026-01-25 | デザイン方針の実装：フォントを M PLUS Rounded 1c に変更。プライマリを sky 系、ニュートラルを slate 系に統一（gray 廃止）。角丸・ホバー（scale-[1.02]）・カード/ボタン色を 13_design_direction に合わせて適用。4.2 を実装済み内容に更新。 |
+| 2026-01-25 | ユーザーテスト改善要件を追加：15_user_test_improvement_requirements.md。TOP（背景・ブランド・計測・16スタイルアイコン）、回答画面（プログレスバー固定・1〜6の意味）、結果画面（Facebookシェアテキスト・LINE削除・画像生成整理・X用結果画像）を定義。 |
+| 2026-01-25 | 結果画面シェアを現行実装に合わせて更新：LINE削除・画像生成・保存は提供しない・Facebookはクリップボード案内。技術スタック・MVPから画像保存を削除。14/15を参照仕様として3.2・ファイル構成に明記。16_result_page_spec.md は 01 に統合のうえ削除。 |

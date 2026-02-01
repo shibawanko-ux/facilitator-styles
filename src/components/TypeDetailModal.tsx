@@ -73,7 +73,7 @@ export function TypeDetailModal({ type, onClose }: TypeDetailModalProps) {
       onClick={onClose}
     >
       <div
-        className="relative bg-white rounded-2xl shadow-xl max-h-[90vh] w-full max-w-2xl overflow-y-auto"
+        className="relative bg-white rounded-2xl border border-slate-200 shadow-lg max-h-[90vh] w-full max-w-2xl overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* 白い余白（モーダル最上部）＋閉じるボタンを右上に配置 */}

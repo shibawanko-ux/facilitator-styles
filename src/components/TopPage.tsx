@@ -17,12 +17,12 @@ function TypeCard({
   colorClass: string;
   onClick: () => void;
 }) {
-  // 案D改3: 塊の色の同系統で2グループ濃淡。触発型=深い赤系統、見守型=添付参照の青系統。
-  const colorClasses: Record<string, { bg: string; border: string; text: string; iconBg: string }> = {
-    primary: { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-900', iconBg: 'bg-red-900' },   // 推進者（深い赤・濃いめ）
-    accent: { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-800', iconBg: 'bg-red-800' },   // 共感者（深い赤・薄め）
-    blue: { bg: 'bg-[#F0F8FF]', border: 'border-[#B8D4E8]', text: 'text-[#1e3a8a]', iconBg: 'bg-[#1F86C8]' },   // 戦略家（参照青・濃いめ）
-    green: { bg: 'bg-[#F0F8FF]', border: 'border-[#B8D4E8]', text: 'text-[#1e3a8a]', iconBg: 'bg-[#38a5d8]' },  // 守護者（参照青・薄め）
+  // 案D改3: 塊の色の同系統で2グループ濃淡。触発型=深い赤系統、見守型=添付参照の青系統。TOP-ICON-01: 頭文字アイコン廃止、テキストのみ。
+  const colorClasses: Record<string, { bg: string; border: string; text: string }> = {
+    primary: { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-900' },
+    accent: { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-800' },
+    blue: { bg: 'bg-[#F0F8FF]', border: 'border-[#B8D4E8]', text: 'text-[#1e3a8a]' },
+    green: { bg: 'bg-[#F0F8FF]', border: 'border-[#B8D4E8]', text: 'text-[#1e3a8a]' },
   };
 
   const colors = colorClasses[colorClass] || colorClasses.primary;
@@ -31,18 +31,16 @@ function TypeCard({
     <button
       type="button"
       onClick={onClick}
-      className={`w-full text-left p-4 rounded-xl border ${colors.border} ${colors.bg} hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2`}
+      className={`w-full text-left p-4 rounded-xl border ${colors.border} ${colors.bg} hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 flex items-start gap-3`}
     >
-      <div className="flex items-start gap-3">
-        <div className={`w-10 h-10 rounded-xl ${colors.iconBg} flex items-center justify-center flex-shrink-0`}>
-          <span className="text-white font-bold text-sm">
-            {type.name.charAt(0)}
-          </span>
-        </div>
-        <div className="min-w-0">
-          <h4 className={`font-bold ${colors.text} text-sm`}>{type.name}</h4>
-          <p className="text-xs text-slate-500 mt-1 line-clamp-2">{type.catchcopy.replace(/\*\*/g, '')}</p>
-        </div>
+      {/* 将来的なマンガ風イラスト用スペース（枠のみ確保） */}
+      <div
+        className="w-14 h-14 flex-shrink-0 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50/80 flex items-center justify-center"
+        aria-hidden="true"
+      />
+      <div className="min-w-0 flex-1">
+        <h4 className={`font-bold ${colors.text} text-sm`}>{type.name}</h4>
+        <p className="text-xs text-slate-500 mt-1 line-clamp-2">{type.catchcopy.replace(/\*\*/g, '')}</p>
       </div>
     </button>
   );
@@ -78,7 +76,7 @@ function TypeCategory({
                 <h3 className="font-bold text-white">{title}</h3>
         <p className={`text-sm ${colors.accent}`}>{description}</p>
       </div>
-      <div className="bg-white rounded-b-2xl border border-t-0 border-slate-100 p-4">
+      <div className="bg-white rounded-b-2xl border border-t-0 border-slate-200 p-4 shadow-sm">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {types.map((type) => (
             <TypeCard
@@ -112,9 +110,9 @@ export function TopPage({ onStart }: TopPageProps) {
   );
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* ヒーローセクション */}
-      <div className="section flex flex-col items-center justify-center px-6">
+    <div className="min-h-screen bg-slate-50">
+      {/* ヒーローセクション：キャッチ・ロゴ・説明・CTA */}
+      <section className="section flex flex-col items-center justify-center px-6 bg-gradient-to-b from-white to-slate-50/90" aria-label="診断のご案内">
         <div className="max-w-2xl w-full text-center animate-fade-in">
           {/* ロゴ・タイトル */}
           <div className="mb-12">
@@ -133,8 +131,8 @@ export function TopPage({ onStart }: TopPageProps) {
             </p>
           </div>
 
-          {/* 説明 */}
-          <div className="card mb-10 text-left">
+          {/* 説明カード（TOP-BG-01: カードとして背景から切り出し） */}
+          <div className="card card-top mb-10 text-left shadow-sm">
             <h2 className="text-xl font-semibold mb-4 text-slate-800 text-center">
               あなたのファシリテーションスタイルを発見しよう
             </h2>
@@ -143,9 +141,9 @@ export function TopPage({ onStart }: TopPageProps) {
               4つの軸であなたのスタイルを可視化し、強みや成長のヒントをお伝えします。
             </p>
 
-            {/* Step1: 診断で測る4つの軸（軸色: 介入=赤, 知覚=緑, 判断=黄, 場の関わり=青） */}
-            <p className="text-sm font-medium text-slate-700 mb-3 text-center">診断で測定する4つの軸</p>
-            <p className="text-xs text-slate-600 leading-relaxed mb-4 text-center">
+            {/* 診断で測る4つの軸（TOP-BG-01: 階層・余白） */}
+            <h3 className="text-sm font-bold text-slate-700 mb-2 text-center">診断で測定する4つの軸</h3>
+            <p className="text-xs text-slate-600 leading-relaxed mb-5 text-center">
               32問で以下の4つの軸を測定します。これらの組み合わせから16スタイルに判定されます。
             </p>
             <div className="grid grid-cols-2 gap-4 mb-6">
@@ -190,32 +188,53 @@ export function TopPage({ onStart }: TopPageProps) {
             ※この診断は自己理解のためのツールです。結果は参考情報としてご活用ください。
           </p>
         </div>
-      </div>
+      </section>
+
+      {/* ブランド導線セクション（TOP-BG-01: 塊として独立、TOP-BRAND-01） */}
+      <section className="section px-6 bg-white py-12 md:py-16" aria-label="提供元について">
+        <div className="max-w-2xl mx-auto">
+          <a
+            href="https://awareness-design.studio.site/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full flex flex-col sm:flex-row items-stretch sm:items-center gap-4 p-5 rounded-2xl border border-slate-200 bg-white shadow-sm hover:border-slate-300 hover:shadow-md transition-all duration-300 text-left no-underline focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+          >
+            <div className="min-w-0 flex-1">
+              <h3 className="font-bold text-slate-800 text-lg">awareness=design</h3>
+              <p className="text-sm text-slate-600 mt-1 leading-relaxed">
+                awareness=designは、対話を通じて、チームや家族といった身近な関係性に気づきと変化が生まれる場をデザインしています。
+              </p>
+              <p className="text-xs text-slate-500 mt-1 font-medium">awareness-design.studio.site</p>
+            </div>
+            <div className="flex-shrink-0 flex items-center justify-center">
+              <img
+                src="/awareness_design_sc.png"
+                alt="awareness=design"
+                className="h-20 sm:h-24 w-auto object-contain"
+              />
+            </div>
+          </a>
+        </div>
+      </section>
 
       {/* ファシリテーター16スタイル一覧セクション */}
-      <div className="section px-6 bg-slate-50">
+      <section className="section px-6 bg-slate-50" aria-label="16スタイル一覧">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-14">
+            <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">16 styles</p>
             <h2 className="section-title">
               ファシリテーター16スタイル
             </h2>
-            <p className="section-subtitle">
+            <p className="section-subtitle mt-3">
               4つの軸の組み合わせによって分類されます
             </p>
           </div>
 
-          {/* 触発型グループ */}
+          {/* 触発型グループ（赤系統で視認性・ブロックの一貫性） */}
           <div className="mb-16">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="icon-circle bg-red-900">
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-slate-800">触発型ファシリテーター</h3>
-                <p className="text-sm text-slate-500">場に積極的に働きかけ、エネルギーを引き出す</p>
-              </div>
+            <div className="mb-8">
+              <h3 className="text-xl font-bold text-red-900">触発型ファシリテーター</h3>
+              <p className="text-sm text-red-700">場に積極的に働きかけ、エネルギーを引き出す</p>
             </div>
 
             <TypeCategory
@@ -235,19 +254,11 @@ export function TopPage({ onStart }: TopPageProps) {
             />
           </div>
 
-          {/* 見守型グループ */}
+          {/* 見守型グループ（青系統で視認性・ブロックの一貫性） */}
           <div>
-            <div className="flex items-center gap-4 mb-8">
-              <div className="icon-circle bg-[#1F86C8]">
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-slate-800">見守型ファシリテーター</h3>
-                <p className="text-sm text-slate-500">静かに見守り、参加者の主体性を引き出す</p>
-              </div>
+            <div className="mb-8">
+              <h3 className="text-xl font-bold text-[#1F86C8]">見守型ファシリテーター</h3>
+              <p className="text-sm text-[#1e3a8a]">静かに見守り、参加者の主体性を引き出す</p>
             </div>
 
             <TypeCategory
@@ -283,13 +294,13 @@ export function TopPage({ onStart }: TopPageProps) {
             </p>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* タイプ詳細モーダル */}
       <TypeDetailModal type={selectedType} onClose={() => setSelectedType(null)} />
 
       {/* フッター */}
-      <div className="px-6 py-8 text-center bg-white border-t border-slate-100">
+      <footer className="px-6 py-10 text-center bg-white border-t border-slate-200">
         <a
           href="https://awareness-design.studio.site/"
           target="_blank"
@@ -301,7 +312,7 @@ export function TopPage({ onStart }: TopPageProps) {
         <p className="mt-2 text-xs text-slate-400">
           ファシリテーション研究を参考にした診断です。
         </p>
-      </div>
+      </footer>
     </div>
   );
 }

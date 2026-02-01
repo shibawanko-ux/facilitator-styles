@@ -36,10 +36,16 @@
            focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-2;
   }
   
+  /* 全ページ統一: カードは角丸・枠・軽い影で背景から切り出し */
   .card {
-    @apply bg-white rounded-2xl border border-slate-100 p-8
-           hover:border-slate-200 hover:shadow-sm
+    @apply bg-white rounded-2xl border border-slate-200 p-8 shadow-sm
+           hover:border-slate-300 hover:shadow-md
            transition-all duration-300 ease-out;
+  }
+
+  /* TOP 説明カード用（card と同様・必要に応じて上書き用） */
+  .card-top {
+    @apply shadow-sm;
   }
   
   .card-interactive {
