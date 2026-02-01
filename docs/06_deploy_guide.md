@@ -1,6 +1,6 @@
 # Vercelへのデプロイ手順
 
-このガイドでは、ファシリスタイルをVercelにデプロイする手順を説明します。
+このガイドでは、ファシリテータースタイルをVercelにデプロイする手順を説明します。
 
 ## 前提条件
 
@@ -32,7 +32,7 @@ git init
 git add .
 
 # 最初のコミット
-git commit -m "Initial commit: ファシリスタイル診断アプリ"
+git commit -m "Initial commit: ファシリテータースタイル診断アプリ"
 
 # GitHubリポジトリをリモートに追加
 git remote add origin https://github.com/YOUR_USERNAME/facilistyle.git

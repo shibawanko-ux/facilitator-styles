@@ -13,19 +13,19 @@ export function ShareSection({ result }: ShareSectionProps) {
   // 診断結果＋誘導文＋awareness=design 告知＋ハッシュタグ
   const plainCatchcopy = result.type.catchcopy.replace(/\*\*/g, '');
   const shareTextFull = [
-    `ファシリスタイル診断の結果、私は「${result.type.name}」スタイルでした！ ${plainCatchcopy}`,
+    `ファシリテータースタイル診断の結果、私は「${result.type.name}」スタイルでした！ ${plainCatchcopy}`,
     '',
     `あなたも診断してみて 👉 ${shareUrl}`,
-    'ファシリスタイル診断 by awareness=design',
-    '#ファシリスタイル #awarenessdesign',
+    'ファシリテータースタイル診断 by awareness=design',
+    '#ファシリテータースタイル #awarenessdesign',
   ].join('\n');
 
   // X(Twitter)用：URLは intent の url パラメータで渡すため、本文には含めない
   const shareTextForTwitter = [
-    `ファシリスタイル診断の結果、私は「${result.type.name}」スタイルでした！ ${plainCatchcopy}`,
+    `ファシリテータースタイル診断の結果、私は「${result.type.name}」スタイルでした！ ${plainCatchcopy}`,
     '',
     'あなたも診断してみて 👉',
-    '#ファシリスタイル #awarenessdesign',
+    '#ファシリテータースタイル #awarenessdesign',
   ].join('\n');
 
   // X(Twitter)でシェア（URLは別パラメータで渡す）
