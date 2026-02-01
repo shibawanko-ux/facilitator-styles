@@ -77,12 +77,15 @@ export function useDiagnosis() {
     return answers.find((a) => a.questionId === currentQuestion.id);
   }, [answers, currentQuestion]);
 
-  // トップに戻る
+  // トップに戻る（ページ最上部へスクロール）
   const goToTop = useCallback(() => {
     setStep('top');
     setAnswers([]);
     setCurrentQuestionIndex(0);
     setResult(null);
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }
   }, []);
 
   // 進捗率

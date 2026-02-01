@@ -417,13 +417,13 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
           </a>
         </div>
 
-        {/* もう一度診断する（視認性のためプライマリ・やや大きめ） */}
+        {/* トップに戻る（トップ画面へ遷移） */}
         <div className="text-center mt-10">
           <button
             onClick={onRestart}
             className="btn-primary text-lg font-bold py-5 px-10"
           >
-            もう一度診断する
+            トップに戻る
           </button>
         </div>
       </div>
