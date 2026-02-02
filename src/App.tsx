@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react';
 import { useDiagnosis } from './hooks/useDiagnosis';
 import { TopPage } from './components/TopPage';
 import { QuestionPage } from './components/QuestionPage';
@@ -44,6 +45,7 @@ function App() {
           onRestart={goToTop}
         />
       )}
+      <Analytics />
     </div>
   );
 }
