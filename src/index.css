@@ -104,3 +104,24 @@
     animation-delay: 0.4s;
   }
 }
+
+/* 印刷時：PDF保存用（印刷ダイアログで「PDFに保存」を選択） */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white;
+  }
+  /* 背景色を印刷に含める（結果カードのグレー・色付きブロックなど） */
+  .bg-slate-600,
+  .bg-slate-50,
+  .bg-emerald-50,
+  .bg-amber-50,
+  .bg-red-50,
+  .bg-sky-50,
+  [class*="bg-"] {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

@@ -390,7 +390,7 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
         />
 
         {/* シェア・保存セクション（09_sns_share_requirements 準拠） */}
-        <section id="share-section" className="card mb-10" aria-label="結果をシェア・保存">
+        <section id="share-section" className="card mb-10 no-print" aria-label="結果をシェア・保存">
           <div className="flex items-center gap-4 mb-8">
             <div className="icon-square bg-rose-100">
               <svg className="w-5 h-5 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -406,7 +406,7 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
         </section>
 
         {/* awareness=design 導線カード（TOP と同内容・シェアとの隙間は他セクション同様 mb-10 のみ） */}
-        <div className="w-full">
+        <div className="w-full no-print">
           <a
             href="https://awareness-design.studio.site/"
             target="_blank"
@@ -432,7 +432,7 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
         </div>
 
         {/* トップに戻る（トップ画面へ遷移） */}
-        <div className="text-center mt-10">
+        <div className="text-center mt-10 no-print">
           <button
             onClick={onRestart}
             className="btn-primary text-lg font-bold py-5 px-10"
@@ -443,7 +443,7 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
       </div>
 
       {/* フッター（TOP・Question と統一・全幅） */}
-      <footer className="mt-auto px-6 py-10 text-center bg-white border-t border-slate-200">
+      <footer className="mt-auto px-6 py-10 text-center bg-white border-t border-slate-200 no-print">
         <a
           href="https://awareness-design.studio.site/"
           target="_blank"
