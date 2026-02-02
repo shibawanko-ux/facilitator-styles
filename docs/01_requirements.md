@@ -383,7 +383,7 @@ TOP画面の実装・クラスレベル仕様は [14_top_page_spec.md](14_top_pa
 
 ### 含む（Want）
 
-- ⏳ Google Analytics（設定待ち）
+- ⏳ Google Analytics（GA4 実装済み。測定IDを Vercel の環境変数 `VITE_GA_TRACKING_ID` に設定すれば有効。手順は [06_deploy_guide.md](06_deploy_guide.md) を参照）
 
 ### 含まない（将来対応）
 

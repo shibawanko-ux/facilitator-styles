@@ -118,16 +118,44 @@ vercel --prod
 
 ---
 
-## 環境変数の設定（必要な場合）
+## Google Analytics（GA4）でアクセス数を確認する
 
-Google Analyticsなどを追加する場合:
+本番のアクセス数（PV・UVなど）を確認するには Google Analytics 4 を設定します。
 
-1. Vercelダッシュボードでプロジェクトを選択
+### Step 1: GA4 で測定IDを取得する
+
+1. [Google Analytics](https://analytics.google.com/) にログイン
+2. 「管理」（左下の歯車）→「プロパティを作成」または既存プロパティを選択
+3. 「データストリーム」→「ストリームを追加」→「ウェブ」を選択
+4. ウェブストリームの URL に `https://facilitator-styles.vercel.app` を入力、ストリーム名を任意で入力して「ストリームを作成」
+5. 表示される **測定 ID**（`G-XXXXXXXXXX` 形式）をコピー
+
+### Step 2: Vercel に環境変数を設定する
+
+1. [Vercel](https://vercel.com) ダッシュボードでプロジェクト「facilitator-styles」を選択
 2. 「Settings」→「Environment Variables」
 3. 変数を追加:
-   - Name: `VITE_GA_TRACKING_ID`
-   - Value: `G-XXXXXXXXXX`
-   - Environment: Production
+   - **Name**: `VITE_GA_TRACKING_ID`
+   - **Value**: コピーした測定ID（例: `G-XXXXXXXXXX`）
+   - **Environment**: Production にチェック
+4. 「Save」をクリック
+5. **本番を再デプロイ**（「Deployments」→ 最新のデプロイの「⋯」→「Redeploy」）して環境変数を反映
+
+### Step 3: アクセス数を確認する
+
+1. [Google Analytics](https://analytics.google.com/) の「レポート」を開く
+2. 「エンゲージメント」→「ページとスクリーン」でページ別の PV
+3. 「ユーザー」で UV や新規／リピーターなどを確認
+
+※ データが反映されるまで最大 24〜48 時間かかることがあります。リアルタイムレポートでは数分以内に表示されます。
+
+---
+
+## 環境変数の一覧（参考）
+
+| Name | 説明 | 例 |
+|------|------|-----|
+| `VITE_GA_TRACKING_ID` | Google Analytics 4 測定ID（任意） | `G-XXXXXXXXXX` |
 
 ---
 
