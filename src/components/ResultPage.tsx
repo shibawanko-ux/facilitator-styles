@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DiagnosisResult, FacilitatorType } from '../data/types';
+import { setResultTypeId } from '../utils/resultCookie';
 import { ScoreChart } from './ScoreChart';
 import { CofaciliSection } from './CofaciliSection';
 import { ShareSection } from './ShareSection';
@@ -17,6 +18,11 @@ interface ResultPageProps {
 
 export function ResultPage({ result, onRestart }: ResultPageProps) {
   const [selectedCompatType, setSelectedCompatType] = useState<FacilitatorType | null>(null);
+
+  // 診断完了時：結果のスタイルIDをクッキーに保存（やり直し時は上書き）
+  useEffect(() => {
+    setResultTypeId(result.type.id);
+  }, [result.type.id]);
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
@@ -337,17 +343,13 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
                           key={item.typeId}
                           type="button"
                           onClick={() => setSelectedCompatType(getFacilitatorTypeById(item.typeId) ?? null)}
-                          className="w-full text-left p-3 bg-white rounded-xl border border-emerald-100 hover:border-emerald-200 hover:shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1 flex items-start gap-3"
+                          className="w-full text-left p-3 bg-white rounded-xl border border-emerald-100 hover:border-emerald-200 hover:shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1 flex items-start justify-between gap-2"
                         >
-                          {/* 将来的なイラスト用スペース（枠のみ確保） */}
-                          <div
-                            className="w-14 h-14 flex-shrink-0 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50/80 flex items-center justify-center"
-                            aria-hidden="true"
-                          />
                           <div className="min-w-0 flex-1">
-                            <p className="font-bold text-emerald-800 text-base">{item.typeName}</p>
+                            <p className="font-bold text-emerald-800 text-lg">{item.typeName}</p>
                             <p className="text-sm text-slate-600 mt-1 leading-relaxed">{item.hint}</p>
                           </div>
+                          <span className="flex items-center self-stretch flex-shrink-0 text-emerald-700 text-xl font-bold" aria-hidden="true">›</span>
                         </button>
                       ))}
                     </div>
@@ -362,17 +364,13 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
                           key={item.typeId}
                           type="button"
                           onClick={() => setSelectedCompatType(getFacilitatorTypeById(item.typeId) ?? null)}
-                          className="w-full text-left p-3 bg-white rounded-xl border border-amber-100 hover:border-amber-200 hover:shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1 flex items-start gap-3"
+                          className="w-full text-left p-3 bg-white rounded-xl border border-amber-100 hover:border-amber-200 hover:shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1 flex items-start justify-between gap-2"
                         >
-                          {/* 将来的なイラスト用スペース（枠のみ確保） */}
-                          <div
-                            className="w-14 h-14 flex-shrink-0 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50/80 flex items-center justify-center"
-                            aria-hidden="true"
-                          />
                           <div className="min-w-0 flex-1">
-                            <p className="font-bold text-amber-800 text-base">{item.typeName}</p>
+                            <p className="font-bold text-amber-800 text-lg">{item.typeName}</p>
                             <p className="text-sm text-slate-600 mt-1 leading-relaxed">{item.hint}</p>
                           </div>
+                          <span className="flex items-center self-stretch flex-shrink-0 text-amber-700 text-xl font-bold" aria-hidden="true">›</span>
                         </button>
                       ))}
                     </div>

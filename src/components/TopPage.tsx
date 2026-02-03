@@ -1,23 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { facilitatorTypes } from '../data/facilitatorTypes';
 import { FacilitatorType } from '../data/types';
 import { TypeDetailModal } from './TypeDetailModal';
+import { getResultTypeId } from '../utils/resultCookie';
 
 interface TopPageProps {
   onStart: () => void;
 }
 
-// タイプカードコンポーネント（クリックで詳細モーダル表示）
+// タイプカードコンポーネント（クリックで詳細モーダル表示）。自分の結果のカードにのみ✓表示。
 function TypeCard({
   type,
   colorClass,
+  isCurrentResult,
   onClick,
 }: {
   type: FacilitatorType;
   colorClass: string;
+  isCurrentResult: boolean;
   onClick: () => void;
 }) {
-  // 案D改3: 塊の色の同系統で2グループ濃淡。触発型=深い赤系統、見守型=添付参照の青系統。TOP-ICON-01: 頭文字アイコン廃止、テキストのみ。
   const colorClasses: Record<string, { bg: string; border: string; text: string }> = {
     primary: { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-900' },
     accent: { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-800' },
@@ -33,15 +35,23 @@ function TypeCard({
       onClick={onClick}
       className={`w-full text-left p-4 rounded-xl border ${colors.border} ${colors.bg} hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 flex items-start gap-3`}
     >
-      {/* 将来的なマンガ風イラスト用スペース（枠のみ確保） */}
-      <div
-        className="w-14 h-14 flex-shrink-0 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50/80 flex items-center justify-center"
-        aria-hidden="true"
-      />
-      <div className="min-w-0 flex-1">
-        <h4 className={`font-bold ${colors.text} text-sm`}>{type.name}</h4>
-        <p className="text-xs text-slate-500 mt-1 line-clamp-2">{type.catchcopy.replace(/\*\*/g, '')}</p>
+      {/* デフォルトは○（回答画面と同様）。自分の結果のカードは回答画面と同じデザイン（塗り円＋白い✓＋リング） */}
+      <div className="w-14 h-14 flex-shrink-0 flex items-center justify-center" aria-hidden="true">
+        {isCurrentResult ? (
+          <span className="w-14 h-14 flex items-center justify-center rounded-full bg-emerald-600 text-white" aria-label="診断結果">
+            <svg className="w-2/3 h-2/3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3} aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </span>
+        ) : (
+          <span className="w-14 h-14 rounded-full border-2 border-slate-300 bg-slate-50/80" aria-hidden="true" />
+        )}
       </div>
+      <div className="min-w-0 flex-1">
+        <h4 className={`font-bold ${colors.text} text-lg`}>{type.name}</h4>
+        <p className="text-sm text-slate-500 mt-1 line-clamp-2">{type.catchcopy.replace(/\*\*/g, '')}</p>
+      </div>
+      <span className={`flex items-center self-stretch flex-shrink-0 text-xl font-bold ${colors.text}`} aria-hidden="true">›</span>
     </button>
   );
 }
@@ -52,12 +62,14 @@ function TypeCategory({
   description,
   types,
   colorClass,
+  currentResultTypeId,
   onTypeClick,
 }: {
   title: string;
   description: string;
   types: FacilitatorType[];
   colorClass: string;
+  currentResultTypeId: string | null;
   onTypeClick: (type: FacilitatorType) => void;
 }) {
   // 案D改3: 塊の色の同系統で2グループ濃淡。触発型=深い赤、見守型=添付参照の青（#1F86C8）。
@@ -83,6 +95,7 @@ function TypeCategory({
               key={type.id}
               type={type}
               colorClass={colorClass}
+              isCurrentResult={currentResultTypeId === type.id}
               onClick={() => onTypeClick(type)}
             />
           ))}
@@ -94,6 +107,12 @@ function TypeCategory({
 
 export function TopPage({ onStart }: TopPageProps) {
   const [selectedType, setSelectedType] = useState<FacilitatorType | null>(null);
+  const [currentResultTypeId, setCurrentResultTypeId] = useState<string | null>(null);
+
+  // TOP表示時：クッキーから診断結果のスタイルIDを読み取り
+  useEffect(() => {
+    setCurrentResultTypeId(getResultTypeId());
+  }, []);
 
   // タイプをカテゴリ別に分類
   const triggerGoalTypes = facilitatorTypes.filter(
@@ -242,6 +261,7 @@ export function TopPage({ onStart }: TopPageProps) {
               description="場を動かしながら、ゴールに向けて推進する"
               types={triggerGoalTypes}
               colorClass="primary"
+              currentResultTypeId={currentResultTypeId}
               onTypeClick={setSelectedType}
             />
 
@@ -250,6 +270,7 @@ export function TopPage({ onStart }: TopPageProps) {
               description="場を盛り上げながら、関係性を育てる"
               types={triggerRelationTypes}
               colorClass="accent"
+              currentResultTypeId={currentResultTypeId}
               onTypeClick={setSelectedType}
             />
           </div>
@@ -266,6 +287,7 @@ export function TopPage({ onStart }: TopPageProps) {
               description="裏方として、確実にゴールへ導く"
               types={watchGoalTypes}
               colorClass="blue"
+              currentResultTypeId={currentResultTypeId}
               onTypeClick={setSelectedType}
             />
 
@@ -274,6 +296,7 @@ export function TopPage({ onStart }: TopPageProps) {
               description="安心感を与え、関係性を守り育てる"
               types={watchRelationTypes}
               colorClass="green"
+              currentResultTypeId={currentResultTypeId}
               onTypeClick={setSelectedType}
             />
           </div>
