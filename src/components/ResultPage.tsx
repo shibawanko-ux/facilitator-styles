@@ -20,9 +20,17 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
   const [selectedCompatType, setSelectedCompatType] = useState<FacilitatorType | null>(null);
 
   // 診断完了時：結果のスタイルIDをクッキーに保存（やり直し時は上書き）
+  // 結果表示をGA4で計測（タイプ別の表示回数）
   useEffect(() => {
     setResultTypeId(result.type.id);
-  }, [result.type.id]);
+
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'result_viewed', {
+        type_id: result.type.id,
+        type_name: result.type.name,
+      });
+    }
+  }, [result.type.id, result.type.name]);
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
