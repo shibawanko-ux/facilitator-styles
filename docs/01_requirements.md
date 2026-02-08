@@ -27,6 +27,11 @@
 - **提供元**: awareness=design
 - **出典**: フッターに「ファシリテーション研究を参考にした診断です」を表示
 
+### 1.6 リポジトリ・デプロイ情報
+
+- **GitHub**: https://github.com/shibawanko-ux/facilitator-styles
+- **本番URL**: https://facilitator-styles.vercel.app
+
 ---
 
 ## 2. 診断システム設計
@@ -257,6 +262,7 @@ TOP画面の実装・クラスレベル仕様は [14_top_page_spec.md](14_top_pa
 
 **セクション1: あなたのスタイル**（採用: 1-A）
 
+- **GA4 結果表示イベント（result_viewed）**: 結果画面表示時に `result_viewed` イベントを GA4 に送信する。パラメータ: `type_id`（スタイルID）、`type_name`（スタイル名）。目的: 各診断タイプの結果表示回数を GA4 の探索レポートで集計可能にする。GA4 側でカスタムディメンション（イベントパラメータ `type_name`）を登録する必要あり。
 - 「あなたのファシリテータースタイルは...」のヒーロー背景は**グレー（slate-600）**で統一（PC・スマホ共通）。テキストは白・slate-200。
 - 「あなたのファシリテータースタイルは...」→ **スタイル名（ニックネーム）** を大きく表示（例：「場の指揮者」）
 - キャッチコピー
@@ -351,7 +357,7 @@ TOP画面の実装・クラスレベル仕様は [14_top_page_spec.md](14_top_pa
 - **フロントエンド**: React 18 + Vite 5 + TypeScript
 - **スタイリング**: Tailwind CSS 3
 - **ホスティング**: Vercel
-- **アクセス解析**: Google Analytics（want要件）
+- **アクセス解析**: Google Analytics（GA4 実装済み。ページビュー＋結果表示イベント result_viewed）
 
 ※結果画像の生成・保存は提供しない（15 ユーザーテスト改善 R-IMG-GEN-01 に基づく）。
 
@@ -389,7 +395,7 @@ TOP画面の実装・クラスレベル仕様は [14_top_page_spec.md](14_top_pa
 
 ### 含む（Want）
 
-- ⏳ Google Analytics（GA4 実装済み。測定IDを Vercel の環境変数 `VITE_GA_TRACKING_ID` に設定すれば有効。手順は [06_deploy_guide.md](06_deploy_guide.md) を参照）
+- ✅ Google Analytics（GA4 実装済み。ページビュー＋result_viewed イベントで診断タイプ別表示回数を計測可能。測定IDは index.html に設定。GA4 でカスタムディメンション type_name を登録することで探索レポートで集計可能。手順は [06_deploy_guide.md](06_deploy_guide.md) を参照）
 
 ### 含まない（将来対応）
 
@@ -559,3 +565,4 @@ npm run build
 | 2026-01-25 | 上記を実装：resultCookie（fs_result・1年・Path=/）、結果画面で保存、TOPで読み取り・該当カードに✓表示。イラスト枠削除。 |
 | 2026-01-25 | TOP 16スタイル：デフォルトは○（回答画面と同様）、自分の結果は塗り円＋白い✓（回答デザイン踏襲・外枠なし）。タイトルtext-lg・リード文text-sm。右端に›を縦中央寄せでクリック可能を示す。 |
 | 2026-01-25 | 結果画面「他のスタイルとの相性」：イラスト枠削除、タイトルtext-lg、右端に›を縦中央寄せでクリック可能を示す。要件定義にクッキー仕様（なし時は✓表示せず・やり直しで✓は新スタイルにのみ）と上記UIを追記。 |
+| 2026-02-08 | GA4 result_viewed イベント追加。結果画面表示時に type_id/type_name を送信し、各スタイルの表示回数を計測可能に。リポジトリ・本番URLを 1.6 に追加。 |

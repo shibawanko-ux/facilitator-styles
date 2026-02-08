@@ -2,6 +2,9 @@
 
 このガイドでは、ファシリテータースタイルをVercelにデプロイする手順を説明します。
 
+- **リポジトリ**: https://github.com/shibawanko-ux/facilitator-styles
+- **本番URL**: https://facilitator-styles.vercel.app
+
 ## 前提条件
 
 - GitHubアカウント（推奨）またはGitLabアカウント

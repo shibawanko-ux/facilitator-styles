@@ -2,6 +2,9 @@
 
 ファシリテーターとしての自分のスタイル・傾向を4つの軸で可視化し、自己理解と成長のヒントを提供する診断アプリです。
 
+- **GitHub**: https://github.com/shibawanko-ux/facilitator-styles
+- **本番**: https://facilitator-styles.vercel.app
+
 ## 機能
 
 - **32問の診断**: 4つの軸（各8問）で傾向を測定
@@ -40,8 +43,9 @@
 ### インストール
 
 ```bash
-# リポジトリをクローン（または任意のディレクトリで実行）
-cd app_Facilitator_type_diagnosis
+# リポジトリをクローン
+git clone https://github.com/shibawanko-ux/facilitator-styles.git
+cd facilitator-styles
 
 # 依存関係をインストール
 npm install
