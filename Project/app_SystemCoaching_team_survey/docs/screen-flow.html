@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>画面遷移図 - チーム状態可視化アプリ</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<style>
+  body { font-family: 'Helvetica Neue', sans-serif; background: #f8fafc; margin: 0; padding: 32px; color: #1e293b; }
+  h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  p.sub { color: #64748b; font-size: 13px; margin-bottom: 32px; }
+  .section { background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 24px; margin-bottom: 24px; }
+  .section h2 { font-size: 14px; font-weight: 600; margin: 0 0 16px 0; display: flex; align-items: center; gap-8px; }
+  .legend { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #475569; }
+  .dot { width: 12px; height: 12px; border-radius: 3px; }
+  .dot-auth   { background: #64748b; }
+  .dot-admin  { background: #3b82f6; }
+  .dot-leader { background: #8b5cf6; }
+  .dot-member { background: #10b981; }
+  .dot-shared { background: #f59e0b; }
+  .dot-issue  { background: #ef4444; border: 2px dashed #b91c1c; }
+  .issue-box { background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px; padding: 12px 16px; margin-top: 16px; font-size: 13px; color: #b91c1c; }
+  .issue-box strong { display: block; margin-bottom-4px; }
+  .ok-box { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 12px 16px; margin-top: 8px; font-size: 13px; color: #15803d; }
+</style>
+</head>
+<body>
+
+<h1>画面遷移図 — チーム状態可視化アプリ</h1>
+<p class="sub">作成日: 2026-03-15　※ 赤い破線はUX上の課題箇所</p>
+
+<div class="legend">
+  <div class="legend-item"><div class="dot dot-auth"></div> 認証（全ロール）</div>
+  <div class="legend-item"><div class="dot dot-admin"></div> Admin</div>
+  <div class="legend-item"><div class="dot dot-leader"></div> Leader</div>
+  <div class="legend-item"><div class="dot dot-member"></div> Member</div>
+  <div class="legend-item"><div class="dot dot-shared"></div> 共通画面</div>
+  <div class="legend-item"><div class="dot dot-issue"></div> UX課題あり</div>
+</div>
+
+<!-- 認証フロー -->
+<div class="section">
+  <h2>🔐 認証フロー（全ロール共通）</h2>
+  <div class="mermaid">
+flowchart LR
+  A([未ログイン]) -->|URLアクセス| B[ログイン画面\n/login]
+  B -->|メール＋PW| C([ダッシュボードへ])
+  D([招待メール]) -->|リンククリック| E[/auth/callback]
+  E --> F[パスワード設定\n/set-password]
+  F -->|設定完了| C
+  style A fill:#f1f5f9,stroke:#94a3b8
+  style C fill:#f1f5f9,stroke:#94a3b8
+  style D fill:#f1f5f9,stroke:#94a3b8
+  style B fill:#e2e8f0,stroke:#64748b,color:#1e293b
+  style E fill:#e2e8f0,stroke:#64748b,color:#1e293b
+  style F fill:#e2e8f0,stroke:#64748b,color:#1e293b
+  </div>
+</div>
+
+<!-- Adminフロー -->
+<div class="section">
+  <h2>🔵 Admin の画面遷移</h2>
+  <div class="mermaid">
+flowchart TD
+  DB[ダッシュボード\n/\nチーム数・メンバー数・アンケート数\nチーム一覧]
+  DB -->|チームを追加 →| TM[チーム管理\n/teams]
+  DB -->|サイドバー| MM[メンバー管理\n/members]
+  DB -->|サイドバー| SM[アンケート管理\n/surveys]
+  DB -->|結果を見る →\ntreamId付き| RS[結果閲覧\n/results?teamId=xxx]
+  SB -->|結果閲覧\ntreamIdなし| RSX
+
+  subgraph SB[サイドバーメニュー]
+    n1[ダッシュボード]
+    n2[チーム管理]
+    n3[メンバー管理]
+    n4[アンケート管理]
+    n5[結果閲覧 ⚠️]
+  end
+
+  RSX[結果閲覧\n/results\n※teamIdなし＝最初のチームが表示される]
+
+  style DB fill:#dbeafe,stroke:#3b82f6,color:#1e293b
+  style TM fill:#dbeafe,stroke:#3b82f6,color:#1e293b
+  style MM fill:#dbeafe,stroke:#3b82f6,color:#1e293b
+  style SM fill:#dbeafe,stroke:#3b82f6,color:#1e293b
+  style RS fill:#dbeafe,stroke:#3b82f6,color:#1e293b
+  style RSX fill:#fee2e2,stroke:#ef4444,stroke-dasharray:5 5,color:#b91c1c
+  style SB fill:#f8fafc,stroke:#cbd5e1
+  </div>
+
+  <div class="issue-box">
+    <strong>⚠️ UX課題：サイドバーの「結果閲覧」はtreamIdが渡らない</strong>
+    サイドバーから直接「結果閲覧」を押すと、常に最初のチームの結果が表示される。<br>
+    複数チームを管理するAdminが意図しないチームの結果を見てしまう可能性がある。
+  </div>
+  <div class="ok-box">
+    ✅ ダッシュボードの「結果を見る →」は各チームのtreamIdを渡して正しく遷移する
+  </div>
+</div>
+
+<!-- Leaderフロー -->
+<div class="section">
+  <h2>🟣 Leader の画面遷移</h2>
+  <div class="mermaid">
+flowchart LR
+  DB2[ダッシュボード\n/ \n担当チームの一覧]
+  DB2 -->|結果を見る →| RS2[結果閲覧\n/results?teamId=xxx]
+  DB2 -->|サイドバー| RS3[結果閲覧\n/results\n※自分のチームが表示]
+
+  style DB2 fill:#ede9fe,stroke:#8b5cf6,color:#1e293b
+  style RS2 fill:#ede9fe,stroke:#8b5cf6,color:#1e293b
+  style RS3 fill:#ede9fe,stroke:#8b5cf6,color:#1e293b
+  </div>
+  <div class="ok-box">
+    ✅ Leaderはtream_membersで自チームが特定できるのでサイドバーからでも正しく表示される
+  </div>
+</div>
+
+<!-- Memberフロー -->
+<div class="section">
+  <h2>🟢 Member の画面遷移</h2>
+  <div class="mermaid">
+flowchart LR
+  DB3[ダッシュボード\n/\n自チームの状態]
+  DB3 -->|アンケート回答| AQ[アンケート回答\n/survey]
+  AQ -->|送信完了| TK[完了画面\n/survey/thanks]
+  DB3 -->|結果を見る| RS4[結果閲覧\n/results]
+
+  style DB3 fill:#d1fae5,stroke:#10b981,color:#1e293b
+  style AQ fill:#d1fae5,stroke:#10b981,color:#1e293b
+  style TK fill:#d1fae5,stroke:#10b981,color:#1e293b
+  style RS4 fill:#d1fae5,stroke:#10b981,color:#1e293b
+  </div>
+</div>
+
+<!-- UX改善提案 -->
+<div class="section">
+  <h2>💡 UX改善の選択肢</h2>
+  <div class="mermaid">
+flowchart LR
+  subgraph 現状["現状（課題あり）"]
+    A1[サイドバー\n結果閲覧] -->|teamIdなし| B1[最初のチームが\n表示される]
+  end
+  subgraph 案A["案A：サイドバーから結果閲覧を削除"]
+    A2[ダッシュボード] -->|結果を見る →| B2[正しいチームの\n結果が表示]
+  end
+  subgraph 案B["案B：サイドバーの結果閲覧にチーム選択を追加"]
+    A3[サイドバー\n結果閲覧] -->|チーム選択UI| B3[選んだチームの\n結果が表示]
+  end
+
+  style 現状 fill:#fef2f2,stroke:#fca5a5
+  style 案A fill:#f0fdf4,stroke:#86efac
+  style 案B fill:#eff6ff,stroke:#bfdbfe
+  </div>
+</div>
+
+<script>mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { fontSize: '13px' } })</script>
+</body>
+</html>

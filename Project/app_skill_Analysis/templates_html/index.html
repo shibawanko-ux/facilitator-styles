@@ -1,0 +1,1398 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>実践スキル定着度分析</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-top: 0;
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+    }
+    .upload-section {
+      margin: 20px 0;
+    }
+    .file-upload {
+      margin: 15px 0;
+      padding: 15px;
+      border: 2px dashed #ccc;
+      border-radius: 6px;
+      background-color: #fafafa;
+      transition: all 0.3s;
+    }
+    .file-upload:hover {
+      border-color: #3498db;
+      background-color: #f0f8ff;
+    }
+    .file-upload label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #555;
+    }
+    .file-upload input[type="file"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: white;
+    }
+    .file-status {
+      margin-top: 5px;
+      font-size: 0.9em;
+      color: #666;
+    }
+    .file-status.has-file {
+      color: #27ae60;
+      font-weight: bold;
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 20px;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    .msg {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 6px;
+      background-color: #e8f5e9;
+      color: #2e7d32;
+      border-left: 4px solid #4caf50;
+    }
+    .msg.error {
+      background-color: #ffebee;
+      color: #c62828;
+      border-left-color: #f44336;
+    }
+    .msg.info {
+      background-color: #e3f2fd;
+      color: #1565c0;
+      border-left-color: #2196f3;
+    }
+    .links {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #fafafa;
+      border-radius: 6px;
+      border: 1px solid #e0e0e0;
+    }
+    .links h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: #333;
+      font-size: 1.3em;
+    }
+    .links ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .links li {
+      margin: 10px 0;
+      padding: 12px 15px;
+      background-color: #f9f9f9;
+      border-radius: 4px;
+      border-left: 4px solid #3498db;
+      transition: background-color 0.2s;
+    }
+    .links li:hover {
+      background-color: #f0f0f0;
+    }
+    .links a {
+      color: #3498db;
+      text-decoration: none;
+      font-weight: bold;
+      display: block;
+    }
+    .links a:hover {
+      text-decoration: underline;
+      color: #2980b9;
+    }
+    .required-note {
+      font-size: 0.9em;
+      color: #666;
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #fff3cd;
+      border-radius: 4px;
+      border-left: 3px solid #ffc107;
+    }
+    .required-note strong {
+      color: #856404;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    /* 参加者照合バナー */
+    #validationOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    #validationOverlay.active {
+      display: flex;
+    }
+    #validationBanner {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      padding: 28px 32px;
+      max-width: 560px;
+      width: 90%;
+      font-size: 14px;
+    }
+    #validationBanner h3 {
+      margin: 0 0 16px 0;
+      font-size: 16px;
+      color: #333;
+      border-bottom: 2px solid #ffc107;
+      padding-bottom: 8px;
+    }
+    .val-section { margin: 10px 0; }
+    .val-ok    { color: #27ae60; font-weight: bold; }
+    .val-warn  { color: #856404; font-weight: bold; }
+    .val-error { color: #c0392b; font-weight: bold; }
+    .val-list  { margin: 4px 0 0 18px; padding: 0; color: #555; }
+    .val-list li { margin-bottom: 3px; font-size: 13px; font-family: monospace; }
+    .val-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      justify-content: flex-end;
+    }
+    .val-btn-continue {
+      padding: 9px 20px;
+      background: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .val-btn-continue:hover { background: #2980b9; }
+    .val-btn-back {
+      padding: 9px 20px;
+      background: #fff;
+      color: #555;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .val-btn-back:hover { background: #f5f5f5; }
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #3498db;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+    .project-section {
+      margin: 20px 0;
+      padding: 20px;
+      background-color: #f8f9fa;
+      border-radius: 6px;
+      border: 2px solid #dee2e6;
+    }
+    .project-section h2 {
+      margin-top: 0;
+      color: #333;
+      font-size: 1.2em;
+    }
+    .project-option {
+      margin: 15px 0;
+    }
+    .project-option label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #555;
+    }
+    .project-option select,
+    .project-option input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .project-option input[type="text"] {
+      margin-top: 8px;
+    }
+    .project-option input[type="text"]:disabled {
+      background-color: #e9ecef;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>実践スキル定着度分析</h1>
+    
+    <form method="post" enctype="multipart/form-data" id="uploadForm">
+      <div class="project-section">
+        <h2>プロジェクト選択</h2>
+        
+        <div class="project-option">
+          <label for="project_selection">プロジェクト</label>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <select name="project_selection" id="project_selection" required style="flex: 1;">
+            <option value="">-- 選択してください --</option>
+            <option value="new">新規プロジェクトを作成</option>
+            {% if project_list %}
+            {% for project in project_list %}
+            <option value="{{ project.id }}" {% if selected_project_id == project.id %}selected{% endif %} data-project-id="{{ project.id }}">{{ project.name }}</option>
+            {% endfor %}
+            {% endif %}
+          </select>
+            <button type="button" id="deleteProjectBtn" style="display: none; background-color: #e74c3c; padding: 8px 16px; font-size: 14px; width: auto; margin: 0;">
+              削除
+            </button>
+          </div>
+          {% if selected_project_id %}
+          <input type="hidden" id="initial_project_id" value="{{ selected_project_id }}">
+          {% endif %}
+        </div>
+        
+        <div class="project-option" id="new_project_option" style="display: none;">
+          <label for="project_name_new">新規プロジェクト名 <span style="color: red;">*必須</span></label>
+          <input type="text" name="project_name_new" id="project_name_new" 
+                 placeholder="例: 2025年度 デザイン思考研修" 
+                 maxlength="100">
+        </div>
+      </div>
+      
+      <div class="upload-section">
+        <h2>CSVファイルをアップロード</h2>
+        
+        <div id="existing-files-info" style="display: none; margin-bottom: 20px; padding: 15px; background-color: #fff3cd; border: 1px solid #ffc107; border-radius: 5px; color: #856404;">
+          <strong style="color: #856404; font-size: 16px;">⚠ 既存ファイル情報</strong>
+          <p style="margin: 10px 0 0 0; font-size: 14px; color: #856404;">このプロジェクトには既に以下のファイルがアップロードされています。</p>
+          <ul id="existing-files-list" style="margin: 10px 0 0 20px; font-size: 13px; color: #856404;"></ul>
+        </div>
+        
+        <div class="file-upload">
+          <label for="pre_file">実施前.csv <span style="color: red;">*必須</span></label>
+          <input type="file" name="pre_file" id="pre_file" accept=".csv" data-file-type="pre" data-standard-name="実施前.csv">
+          <div class="file-status" id="pre_status"></div>
+          <div class="file-exists-warning" id="pre_exists_warning" style="display: none; color: #ff9800; font-size: 12px; margin-top: 5px;"></div>
+          <div style="font-size: 12px; color: #666; margin-top: 5px;">※ ファイルをアップロードしない場合、既存ファイルが使用されます</div>
+        </div>
+        
+        <div class="file-upload">
+          <label for="post_file">直後.csv <span style="color: #ff9800;">推奨</span></label>
+          <input type="file" name="post_file" id="post_file" accept=".csv" data-file-type="post" data-standard-name="直後.csv">
+          <div class="file-status" id="post_status"></div>
+          <div class="file-exists-warning" id="post_exists_warning" style="display: none; color: #ff9800; font-size: 12px; margin-top: 5px;"></div>
+        </div>
+        
+        <div class="file-upload">
+          <label for="follow_file">1ヶ月後.csv <span style="color: #ff9800;">推奨</span></label>
+          <input type="file" name="follow_file" id="follow_file" accept=".csv" data-file-type="follow" data-standard-name="1ヶ月後.csv">
+          <div class="file-status" id="follow_status"></div>
+          <div class="file-exists-warning" id="follow_exists_warning" style="display: none; color: #ff9800; font-size: 12px; margin-top: 5px;"></div>
+        </div>
+        
+        <div class="file-upload">
+          <label for="manager_file">上長1ヶ月後.csv <span style="color: #9e9e9e;">任意</span></label>
+          <input type="file" name="manager_file" id="manager_file" accept=".csv" data-file-type="manager" data-standard-name="上長1ヶ月後.csv">
+          <div class="file-status" id="manager_status"></div>
+          <div class="file-exists-warning" id="manager_exists_warning" style="display: none; color: #ff9800; font-size: 12px; margin-top: 5px;"></div>
+        </div>
+        
+        <div class="required-note">
+          <strong>注意:</strong> 各CSVファイルは正しい形式である必要があります。ファイル名は任意ですが、内容が正しいことを確認してください。
+        </div>
+      </div>
+      
+      <button type="submit" id="submitBtn">分析を実行</button>
+    </form>
+    
+    {% if msg %}
+    <div class="msg {% if 'エラー' in msg %}error{% elif '完了' in msg or 'Phase' in msg %}info{% endif %}">
+      {{ msg }}
+    </div>
+    {% endif %}
+    
+    {% if email_mismatch_warning %}
+    <div class="msg email-mismatch-warning" style="margin-top: 12px; padding: 14px 18px; background-color: #fff3cd; border: 1px solid #ffc107; border-radius: 6px; color: #856404;">
+      <strong style="font-size: 14px;">⚠ メールアドレス合致のお知らせ</strong>
+      <p style="margin: 10px 0 6px 0; font-size: 14px;">実施前は{{ email_mismatch_warning.pre_count }}名で登録していますが、{{ email_mismatch_warning.matched_count }}人しかメールアドレスが合致しません。</p>
+      <p style="margin: 0; font-size: 14px;">{{ email_mismatch_warning.message_detail }}</p>
+    </div>
+    {% endif %}
+    
+    {% if links or selected_project_id %}
+    <div class="links">
+      <h3>ダウンロード</h3>
+      <ul id="downloadLinksList" style="list-style: none; padding: 0;">
+        {% if links %}
+        {% for label, url in links %}
+        <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+          <span style="flex: 1;">{{ label }}</span>
+          <div style="display: flex; gap: 8px;">
+            {% set view_url = url.replace('/download/', '/view/') %}
+            <a href="{{ view_url }}" target="_blank" style="padding: 6px 12px; background-color: #3498db; color: white; text-decoration: none; border-radius: 4px; font-size: 14px; display: inline-block;">ブラウザで確認</a>
+            <a href="{{ url }}" style="padding: 6px 12px; background-color: #27ae60; color: white; text-decoration: none; border-radius: 4px; font-size: 14px; display: inline-block;">DL</a>
+          </div>
+        </li>
+        {% endfor %}
+        {% elif selected_project_id %}
+        <li id="downloadLinksPlaceholder" style="color: #666; font-style: italic; display: flex; align-items: center;">
+          <span class="spinner"></span>
+          ファイル生成状況を確認中...
+        </li>
+        {% endif %}
+      </ul>
+      
+      {% if selected_project_id %}
+      <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
+        <button type="button" id="generateGasBtn" style="background-color: #27ae60; width: 100%; padding: 12px 24px;">
+          GASコードを生成
+        </button>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+    
+    <!-- GASコード表示モーダル -->
+    <div id="gasModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+      <div style="background-color: #fefefe; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 90%; max-width: 900px; border-radius: 8px; max-height: 80vh; overflow-y: auto; display: flex; flex-direction: column; position: relative;">
+        <button type="button" id="closeGasModal" style="position: absolute; top: 10px; right: 10px; background-color: transparent; color: #666; border: none; padding: 0; cursor: pointer; font-size: 24px; line-height: 1; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='transparent'">×</button>
+        <div style="margin-bottom: 20px;">
+          <h2 style="margin: 0; color: #333; padding-right: 40px;" id="gasModalTitle">GASコード生成</h2>
+        </div>
+        
+        <!-- Phase選択画面 -->
+        <div id="gasPhaseSelection" style="display: block;">
+          <div id="gasPhaseSelectionMessage" style="margin-bottom: 20px;">
+            <p style="color: #666; font-size: 14px; margin: 0 0 20px 0;">
+              Phaseを選択してください
+            </p>
+          </div>
+          <div id="gasPhaseButtonsWrap" style="display: flex; flex-direction: column; gap: 12px;">
+            <button type="button" id="gasPhase2Btn" class="phaseSelectBtn" data-phase="2" style="background-color: #e67e22; color: white; border: none; padding: 15px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; text-align: left; transition: background-color 0.3s;" onmouseover="this.style.backgroundColor='#d35400'" onmouseout="this.style.backgroundColor='#e67e22'">
+              Phase 2用 GASコードを生成
+            </button>
+            <button type="button" id="gasPhase3Btn" class="phaseSelectBtn" data-phase="3" style="background-color: #27ae60; color: white; border: none; padding: 15px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; text-align: left; transition: background-color 0.3s;" onmouseover="this.style.backgroundColor='#229954'" onmouseout="this.style.backgroundColor='#27ae60'">
+              Phase 3用 GASコードを生成
+            </button>
+          </div>
+          <div id="gasIndividualSection" style="margin-top: 30px; padding-top: 30px; border-top: 2px solid #e0e0e0;">
+            <p style="color: #666; font-size: 14px; margin: 0 0 20px 0; font-weight: bold;">
+              個人用GASコード（各参加者ごとにスライドを生成）
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <button type="button" id="gasIndividualPhase2Btn" class="individualPhaseSelectBtn" data-phase="2" data-individual="true" style="background-color: #e67e22; color: white; border: none; padding: 15px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; text-align: left; transition: background-color 0.3s; opacity: 0.9;" onmouseover="this.style.backgroundColor='#d35400'; this.style.opacity='1'" onmouseout="this.style.backgroundColor='#e67e22'; this.style.opacity='0.9'">
+                Phase 2用 個人GASコードを生成
+              </button>
+              <button type="button" id="gasIndividualPhase3Btn" class="individualPhaseSelectBtn" data-phase="3" data-individual="true" style="background-color: #27ae60; color: white; border: none; padding: 15px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; text-align: left; transition: background-color 0.3s; opacity: 0.9;" onmouseover="this.style.backgroundColor='#229954'; this.style.opacity='1'" onmouseout="this.style.backgroundColor='#27ae60'; this.style.opacity='0.9'">
+                Phase 3用 個人GASコードを生成
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- GASコード表示画面 -->
+        <div id="gasCodeDisplay" style="display: none;">
+          <div style="margin-bottom: 15px;">
+            <button type="button" id="backToPhaseSelection" style="background-color: #95a5a6; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px; margin-bottom: 15px;">
+              ← Phase選択に戻る
+            </button>
+            <p style="color: #666; font-size: 14px; margin: 0 0 10px 0;">
+              <strong>使用方法:</strong><br>
+              1. 以下のコードをコピーしてください<br>
+              2. Googleスライドで新しいプレゼンテーションを作成<br>
+              3. 拡張機能 > Apps Script を開く<br>
+              4. コードを貼り付けて保存<br>
+              5. 実行 > generateSlidesFromDrive を実行<br>
+              6. フォルダIDを入力（生成されたレポートファイルが入っているフォルダ）
+            </p>
+          </div>
+          <div id="gasDownloadInfo" style="display: none; margin-bottom: 15px;"></div>
+          <div style="flex: 1; position: relative; margin-bottom: 15px;">
+            <textarea id="gasCodeTextarea" readonly style="width: 100%; height: 500px; font-family: 'Courier New', monospace; font-size: 12px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background-color: #f9f9f9; resize: vertical;"></textarea>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div id="copySuccessMsg" style="display: none; padding: 10px; background-color: #d4edda; color: #155724; border-radius: 4px; border: 1px solid #c3e6cb; flex: 1; margin-right: 10px;">
+              コピーしました！
+            </div>
+            <button type="button" id="copyGasCode" style="background-color: #3498db; color: white; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; min-width: 120px;">コピー</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // 既存ファイル情報を保持
+    let existingFilesInfo = {};
+    
+    // ファイルタイプと表示名のマッピング
+    const fileTypeNames = {
+      'pre': '実施前.csv',
+      'post': '直後.csv',
+      'follow': '1ヶ月後.csv',
+      'manager': '上長1ヶ月後.csv'
+    };
+    
+    // プロジェクト削除ボタンの表示/非表示を制御
+    function updateDeleteButtonVisibility() {
+      const projectSelection = document.getElementById('project_selection');
+      const deleteProjectBtn = document.getElementById('deleteProjectBtn');
+      const selectedValue = projectSelection ? projectSelection.value : '';
+      
+      if (deleteProjectBtn) {
+        // 既存プロジェクトが選択されている場合のみ表示（'new'や空でない場合）
+        if (selectedValue && selectedValue !== 'new' && selectedValue !== '') {
+          deleteProjectBtn.style.display = 'block';
+          deleteProjectBtn.dataset.projectId = selectedValue;
+        } else {
+          deleteProjectBtn.style.display = 'none';
+          deleteProjectBtn.dataset.projectId = '';
+        }
+      }
+    }
+    
+    // プロジェクト選択の変更時の処理
+    document.getElementById('project_selection').addEventListener('change', function() {
+      const newProjectOption = document.getElementById('new_project_option');
+      const projectNameNew = document.getElementById('project_name_new');
+      const existingFilesInfoDiv = document.getElementById('existing-files-info');
+      const existingFilesList = document.getElementById('existing-files-list');
+      
+      // 削除ボタンの表示/非表示を更新
+      updateDeleteButtonVisibility();
+      
+      if (this.value === 'new') {
+        newProjectOption.style.display = 'block';
+        projectNameNew.required = true;
+        existingFilesInfoDiv.style.display = 'none';
+        existingFilesInfo = {};
+        clearFileWarnings();
+      } else if (this.value && this.value !== '') {
+        newProjectOption.style.display = 'none';
+        projectNameNew.required = false;
+        projectNameNew.value = '';
+        
+        // 既存ファイル情報を取得
+        fetch(`/api/project/${this.value}/files`)
+          .then(response => response.json())
+          .then(data => {
+            existingFilesInfo = data.files || {};
+            displayExistingFiles();
+          })
+          .catch(error => {
+            console.error('Error fetching project files:', error);
+            existingFilesInfo = {};
+          });
+      } else {
+        existingFilesInfoDiv.style.display = 'none';
+        existingFilesInfo = {};
+        clearFileWarnings();
+      }
+    });
+    
+    // 既存ファイル情報を表示
+    function displayExistingFiles() {
+      const existingFilesInfoDiv = document.getElementById('existing-files-info');
+      const existingFilesList = document.getElementById('existing-files-list');
+      const existingCount = Object.values(existingFilesInfo).filter(f => f.exists).length;
+      
+      if (existingCount > 0) {
+        existingFilesList.innerHTML = '';
+        for (const [fileType, fileInfo] of Object.entries(existingFilesInfo)) {
+          if (fileInfo.exists) {
+            const li = document.createElement('li');
+            li.textContent = `${fileTypeNames[fileType] || fileInfo.filename} (更新日: ${fileInfo.modified})`;
+            li.style.color = '#856404';
+            existingFilesList.appendChild(li);
+            
+            // 警告を表示
+            const warningEl = document.getElementById(fileType + '_exists_warning');
+            if (warningEl) {
+              warningEl.textContent = `⚠ 既にファイルが存在します（${fileInfo.modified}）`;
+              warningEl.style.display = 'block';
+            }
+          }
+        }
+        existingFilesInfoDiv.style.display = 'block';
+      } else {
+        existingFilesInfoDiv.style.display = 'none';
+        clearFileWarnings();
+      }
+    }
+    
+    // ファイル警告をクリア
+    function clearFileWarnings() {
+      ['pre', 'post', 'follow', 'manager'].forEach(fileType => {
+        const warningEl = document.getElementById(fileType + '_exists_warning');
+        if (warningEl) {
+          warningEl.style.display = 'none';
+          warningEl.textContent = '';
+        }
+      });
+    }
+    
+    // ファイル選択時のステータス表示
+    document.querySelectorAll('input[type="file"]').forEach(input => {
+      input.addEventListener('change', function() {
+        const fileType = this.getAttribute('data-file-type');
+        const statusEl = document.getElementById(fileType + '_status');
+        const standardName = this.getAttribute('data-standard-name');
+        
+        if (this.files && this.files.length > 0) {
+          const selectedFile = this.files[0];
+          const fileName = selectedFile.name;
+          
+          // 既存ファイルがあるかチェック
+          const fileInfo = existingFilesInfo[fileType];
+          if (fileInfo && fileInfo.exists) {
+            // 同じファイル名（標準ファイル名）の場合、確認ダイアログを表示
+            if (fileName === standardName || fileName === fileInfo.filename) {
+              const confirmMessage = `既に「${fileInfo.filename}」が存在します（更新日: ${fileInfo.modified}）。\n\n上書きしますか？`;
+              if (!confirm(confirmMessage)) {
+                // キャンセルされた場合、ファイル選択をリセット
+                this.value = '';
+                statusEl.textContent = '';
+                statusEl.className = 'file-status';
+                return;
+              }
+            }
+          }
+          
+          statusEl.textContent = '✓ ' + fileName;
+          statusEl.className = 'file-status has-file';
+        } else {
+          statusEl.textContent = '';
+          statusEl.className = 'file-status';
+        }
+      });
+    });
+    
+    // フォーム送信時の処理
+    document.getElementById('uploadForm').addEventListener('submit', function(e) {
+      const projectSelection = document.getElementById('project_selection').value;
+      const projectNameNew = document.getElementById('project_name_new').value.trim();
+      
+      // バリデーション
+      if (projectSelection === 'new' && !projectNameNew) {
+        e.preventDefault();
+        alert('新規プロジェクト名を入力してください。');
+        return false;
+      }
+      
+      if (!projectSelection) {
+        e.preventDefault();
+        alert('プロジェクトを選択してください。');
+        return false;
+      }
+      
+      // 新規プロジェクトの場合、実施前.csvが必須
+      if (projectSelection === 'new') {
+        const preFile = document.getElementById('pre_file');
+        if (!preFile.files || !preFile.files.length) {
+          e.preventDefault();
+          alert('新規プロジェクトの場合は、実施前.csvのアップロードが必須です。');
+          return false;
+        }
+      } else {
+        // 既存プロジェクトの場合、実施前.csvがアップロードされていない場合でも既存ファイルを使用できる
+        // バリデーションをスキップ（サーバー側でチェック）
+      }
+      
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = '分析中...';
+      
+      // フォーム送信後にファイル生成状況を監視する準備
+      // （ページが再ロードされるため、実際の監視はページ読み込み後に行われる）
+    });
+    
+    // プロジェクト削除ボタンの処理
+    const deleteProjectBtn = document.getElementById('deleteProjectBtn');
+    if (deleteProjectBtn) {
+      deleteProjectBtn.addEventListener('click', function() {
+        const projectId = this.dataset.projectId;
+        const projectSelection = document.getElementById('project_selection');
+        const selectedOption = projectSelection.options[projectSelection.selectedIndex];
+        const projectName = selectedOption ? selectedOption.text : projectId;
+        
+        if (!projectId || projectId === '' || projectId === 'new') {
+          alert('削除するプロジェクトを選択してください。');
+          return;
+        }
+        
+        // 確認ダイアログ
+        const confirmMessage = `プロジェクト「${projectName}」を削除してもよろしいですか？\n\nこの操作は取り消せません。\nプロジェクトのすべてのファイルとフォルダが削除されます。`;
+        if (!confirm(confirmMessage)) {
+          return;
+        }
+        
+        // 削除実行
+        deleteProjectBtn.disabled = true;
+        deleteProjectBtn.textContent = '削除中...';
+        
+        fetch(`/api/project/${projectId}/delete`, {
+          method: 'DELETE'
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              alert(data.message || 'プロジェクトを削除しました。');
+              // ページをリロードしてプロジェクト一覧を更新
+              window.location.href = '/';
+            } else {
+              alert('エラー: ' + (data.message || 'プロジェクトの削除に失敗しました。'));
+              deleteProjectBtn.disabled = false;
+              deleteProjectBtn.textContent = '削除';
+            }
+          })
+          .catch(error => {
+            console.error('Error deleting project:', error);
+            alert('エラー: プロジェクトの削除中にエラーが発生しました。');
+            deleteProjectBtn.disabled = false;
+            deleteProjectBtn.textContent = '削除';
+          });
+      });
+    }
+    
+    // ファイル生成状況を確認してダウンロードリンクを更新
+    function updateDownloadLinks(projectId) {
+      if (!projectId) return;
+      
+      const downloadLinksList = document.getElementById('downloadLinksList');
+      
+      fetch(`/api/project/${projectId}/files-status`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            console.error('Error fetching files status:', data.error);
+            return;
+          }
+          
+          const filesStatus = data.files_status;
+          const progress = data.progress || { percentage: 0, completed_files: 0, total_files: 0 };
+          const linksHtml = [];
+          let allFilesReady = true;
+          
+          // ファイルリンクを生成するヘルパー関数
+          const createFileLinks = (fileInfo) => {
+            // 進捗率を計算（0-100%）
+            const completeness = fileInfo.completeness_score || 0;
+            const percentage = Math.round(completeness * 100);
+            const isComplete = fileInfo.is_complete !== false && completeness >= 0.95;
+            
+            // ファイルが存在しない、または完成していない場合（95%未満）
+            if (!fileInfo.exists || !isComplete) {
+              const progressText = `作成中...${percentage}%`;
+              const progressStyle = `color: #666; font-style: italic;`;
+              
+              return `<li style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px; ${progressStyle}">
+                <span style="flex: 1; display: flex; align-items: center;">
+                  <span class="spinner"></span>
+                  ${fileInfo.label} - ${progressText}
+                  ${completeness > 0 && completeness < 0.8 ? ' <span style="color: #ff9800; font-size: 12px;">(不完全)</span>' : ''}
+                </span>
+              </li>`;
+            }
+            
+            // ファイルが完成している場合（完成度95%以上）はダウンロードリンクを表示
+            const warningStyle = completeness < 1.0 ? 'border-left: 3px solid #ff9800; padding-left: 8px;' : '';
+            
+            return `<li style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px; ${warningStyle}">
+              <span style="flex: 1;">
+                ${fileInfo.label}
+                ${completeness < 1.0 && completeness >= 0.95 ? ' <span style="color: #ff9800; font-size: 12px;">(不完全)</span>' : ''}
+              </span>
+              <div style="display: flex; gap: 8px;">
+                <a href="/view/${fileInfo.path}" target="_blank" style="padding: 6px 12px; background-color: #3498db; color: white; text-decoration: none; border-radius: 4px; font-size: 14px; display: inline-block;">ブラウザで確認</a>
+                <a href="/download/${fileInfo.path}" style="padding: 6px 12px; background-color: #27ae60; color: white; text-decoration: none; border-radius: 4px; font-size: 14px; display: inline-block;">DL</a>
+              </div>
+            </li>`;
+          };
+          
+          // Phaseごとのファイルを表示（優先）
+          let phaseFilesHtml = [];
+          if (filesStatus.reports_by_phase) {
+            for (let p = 1; p <= 3; p++) {
+              const report = filesStatus.reports_by_phase[p];
+              const radar = filesStatus.radars_by_phase[p];
+              const slideContent = filesStatus.slide_contents_by_phase[p];
+              const individualReport = filesStatus.individual_reports_by_phase && filesStatus.individual_reports_by_phase[p];
+              const individualSlideContent = filesStatus.individual_slide_contents_by_phase && filesStatus.individual_slide_contents_by_phase[p];
+              
+              if (report && report.exists) {
+                const phaseColor = p === 1 ? '#3498db' : p === 2 ? '#e67e22' : '#27ae60';
+                phaseFilesHtml.push(`
+                  <li style="margin-bottom: 15px; padding: 12px; background-color: #f9f9f9; border-left: 4px solid ${phaseColor}; border-radius: 4px;">
+                    <strong style="color: ${phaseColor}; font-size: 15px; margin-bottom: 8px; display: block;">Phase ${p}</strong>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                      ${createFileLinks(report)}
+                      ${radar && radar.exists ? createFileLinks(radar) : ''}
+                      ${slideContent && slideContent.exists ? createFileLinks(slideContent) : ''}
+                      ${individualReport && individualReport.exists ? createFileLinks(individualReport) : ''}
+                      ${individualSlideContent && individualSlideContent.exists ? createFileLinks(individualSlideContent) : ''}
+                    </ul>
+                  </li>
+                `);
+              }
+            }
+          }
+          
+          // CSVファイル
+          filesStatus.csv_files.forEach(csvFile => {
+            linksHtml.push(createFileLinks(csvFile));
+            if (!csvFile.exists || !csvFile.is_complete) {
+              allFilesReady = false;
+            }
+          });
+          
+          if (downloadLinksList) {
+            // 進捗情報を先頭に追加
+            const progressHtml = progress.percentage >= 0 ? `
+              <li style="margin-bottom: 15px; padding: 10px; background-color: #e3f2fd; border-radius: 4px; border-left: 4px solid #2196f3;">
+                <strong>全体進捗: ${progress.percentage}%</strong>
+                <span style="font-size: 12px; color: #666; margin-left: 10px;">
+                  (${progress.completed_files}/${progress.total_files}ファイル完成)
+                </span>
+                <div style="margin-top: 8px; width: 100%; background-color: #fff; border-radius: 4px; height: 20px; overflow: hidden;">
+                  <div style="width: ${progress.percentage}%; background-color: #2196f3; height: 100%; transition: width 0.3s;"></div>
+                </div>
+              </li>
+            ` : '';
+            // Phaseごとのファイルを先に表示、その後CSVファイル
+            downloadLinksList.innerHTML = progressHtml + phaseFilesHtml.join('') + linksHtml.join('');
+          }
+          
+          // GASコードボタンは常に有効（生成中チェックなし）
+          const generateGasBtn = document.getElementById('generateGasBtn');
+          if (generateGasBtn) {
+            generateGasBtn.disabled = false;
+          }
+          
+          // ファイル生成状況の再確認（ダウンロードリンクの更新のみ）
+          // すべてのファイルが完成している場合は再確認を停止
+          let allFilesComplete = true;
+          if (filesStatus.reports_by_phase) {
+            for (let p = 1; p <= 3; p++) {
+              const report = filesStatus.reports_by_phase[p];
+              const radar = filesStatus.radars_by_phase[p];
+              const slideContent = filesStatus.slide_contents_by_phase[p];
+              const individualReport = filesStatus.individual_reports_by_phase && filesStatus.individual_reports_by_phase[p];
+              const individualSlideContent = filesStatus.individual_slide_contents_by_phase && filesStatus.individual_slide_contents_by_phase[p];
+              
+              if (report && report.exists) {
+                if (!report.is_complete || report.completeness_score < 0.95) allFilesComplete = false;
+                if (radar && radar.exists && (!radar.is_complete || radar.completeness_score < 0.95)) allFilesComplete = false;
+                if (slideContent && slideContent.exists && (!slideContent.is_complete || slideContent.completeness_score < 0.95)) allFilesComplete = false;
+                // Phase 2とPhase 3の個別レポートと個別スライド挿入内容
+                if (p >= 2) {
+                  if (individualReport && individualReport.exists && (!individualReport.is_complete || individualReport.completeness_score < 0.95)) allFilesComplete = false;
+                  if (individualSlideContent && individualSlideContent.exists && (!individualSlideContent.is_complete || individualSlideContent.completeness_score < 0.95)) allFilesComplete = false;
+                }
+              }
+            }
+          }
+          if (!filesStatus.csv_files.every(f => f.completeness_score >= 0.95)) {
+            allFilesComplete = false;
+          }
+          
+          if (!allFilesComplete) {
+            setTimeout(() => updateDownloadLinks(projectId), 2000); // 2秒後に再確認
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching files status:', error);
+        });
+    }
+    
+    // ページ読み込み時の初期化
+    document.addEventListener('DOMContentLoaded', function() {
+      const initialProjectId = document.getElementById('initial_project_id');
+      let projectId = null;
+      
+      // 削除ボタンの表示状態を初期化
+      updateDeleteButtonVisibility();
+      
+      if (initialProjectId && initialProjectId.value) {
+        projectId = initialProjectId.value;
+        
+        // 既存ファイル情報を取得
+        fetch(`/api/project/${projectId}/files`)
+          .then(response => response.json())
+          .then(data => {
+            existingFilesInfo = data.files || {};
+            displayExistingFiles();
+          })
+          .catch(error => {
+            console.error('Error fetching project files:', error);
+            existingFilesInfo = {};
+          });
+      }
+      
+      // プロジェクトIDが存在する場合、ファイル生成状況を確認してダウンロードリンクを更新
+      // (linksが既に存在する場合でも、最新のファイル生成状況を確認して更新する)
+      if (projectId) {
+        // すぐに確認（既存のlinksがある場合は上書き、ない場合は生成状況を表示）
+        updateDownloadLinks(projectId);
+      }
+    });
+    
+    // GASコード生成ボタンの処理
+    const gasModal = document.getElementById('gasModal');
+    const closeGasModal = document.getElementById('closeGasModal');
+    const gasCodeTextarea = document.getElementById('gasCodeTextarea');
+    const copyGasCode = document.getElementById('copyGasCode');
+    const copySuccessMsg = document.getElementById('copySuccessMsg');
+    const generateGasBtn = document.getElementById('generateGasBtn');
+    const gasPhaseSelection = document.getElementById('gasPhaseSelection');
+    const gasCodeDisplay = document.getElementById('gasCodeDisplay');
+    const backToPhaseSelection = document.getElementById('backToPhaseSelection');
+    
+    // GASコード生成ダイアログのPhaseボタン表示を max_phase に応じて切り替える（options.apiError が true のときは API エラー用メッセージを表示）
+    function updateGasPhaseButtonsVisibility(maxPhase, options) {
+      const opts = options || {};
+      const isApiError = opts.apiError === true;
+      const phaseNum = isApiError ? 1 : Math.max(1, parseInt(maxPhase, 10) || 1);
+      const phase2Btn = document.getElementById('gasPhase2Btn');
+      const phase3Btn = document.getElementById('gasPhase3Btn');
+      const individualPhase2Btn = document.getElementById('gasIndividualPhase2Btn');
+      const individualPhase3Btn = document.getElementById('gasIndividualPhase3Btn');
+      const buttonsWrap = document.getElementById('gasPhaseButtonsWrap');
+      const individualSection = document.getElementById('gasIndividualSection');
+      const messageWrap = document.getElementById('gasPhaseSelectionMessage');
+
+      if (phase2Btn) phase2Btn.style.display = phaseNum >= 2 ? '' : 'none';
+      if (phase3Btn) phase3Btn.style.display = phaseNum >= 3 ? '' : 'none';
+      if (individualPhase2Btn) individualPhase2Btn.style.display = phaseNum >= 2 ? '' : 'none';
+      if (individualPhase3Btn) individualPhase3Btn.style.display = phaseNum >= 3 ? '' : 'none';
+
+      if (buttonsWrap) buttonsWrap.style.display = phaseNum >= 2 ? '' : 'none';
+      if (individualSection) individualSection.style.display = phaseNum >= 2 ? '' : 'none';
+
+      if (messageWrap) {
+        if (isApiError) {
+          messageWrap.innerHTML = '<p style="color: #666; font-size: 14px; margin: 0;">プロジェクトの情報を取得できませんでした。ページを再読み込みするか、しばらくして再度お試しください。</p>';
+        } else if (phaseNum < 2) {
+          messageWrap.innerHTML = '<p style="color: #666; font-size: 14px; margin: 0;">GASコードは Phase 2 以降で利用可能です。実施前・直後のCSVをアップロードし、分析を実行してください。</p>';
+        } else {
+          messageWrap.innerHTML = '<p style="color: #666; font-size: 14px; margin: 0 0 20px 0;">Phaseを選択してください</p>';
+        }
+      }
+    }
+
+    // GASコード生成ボタンをクリック
+    if (generateGasBtn) {
+      generateGasBtn.addEventListener('click', function() {
+        const projectSelection = document.getElementById('project_selection');
+        const initialProjectIdElem = document.getElementById('initial_project_id');
+        const projectId = (projectSelection && projectSelection.value && projectSelection.value !== 'new') 
+                          ? projectSelection.value 
+                          : (initialProjectIdElem && initialProjectIdElem.value);
+        
+        if (!projectId || projectId === '' || projectId === 'new') {
+          alert('プロジェクトを選択してください。');
+          return;
+        }
+
+        // Phase選択画面を表示（いったん表示）
+        gasPhaseSelection.style.display = 'block';
+        gasCodeDisplay.style.display = 'none';
+        gasModal.style.display = 'block';
+        const gasModalTitle = document.getElementById('gasModalTitle');
+        if (gasModalTitle) {
+          gasModalTitle.textContent = 'GASコード生成';
+        }
+
+        // プロジェクトのファイル状態から max_phase を取得し、ボタン表示を切り替え（files-status に max_phase が含まれる）
+        fetch(`/api/project/${projectId}/files-status`)
+          .then(function(res) {
+            if (!res.ok) {
+              return res.json().then(function(data) {
+                throw new Error(data && data.error ? data.error : '取得に失敗しました');
+              }).catch(function(e) {
+                if (e instanceof Error) throw e;
+                throw new Error('取得に失敗しました');
+              });
+            }
+            return res.json();
+          })
+          .then(function(data) {
+            const filesStatus = (data && data.files_status) ? data.files_status : {};
+            const maxPhase = (filesStatus.max_phase != null) ? filesStatus.max_phase : 1;
+            updateGasPhaseButtonsVisibility(maxPhase, { apiError: false });
+          })
+          .catch(function() {
+            updateGasPhaseButtonsVisibility(1, { apiError: true });
+          });
+      });
+    }
+    
+    // Phase選択に戻るボタン
+    if (backToPhaseSelection) {
+      backToPhaseSelection.addEventListener('click', function() {
+        gasPhaseSelection.style.display = 'block';
+        gasCodeDisplay.style.display = 'none';
+        const gasModalTitle = document.getElementById('gasModalTitle');
+        if (gasModalTitle) {
+          gasModalTitle.textContent = 'GASコード生成';
+        }
+      });
+    }
+    
+    // Phase選択ボタンの処理
+    const phaseSelectBtns = document.querySelectorAll('.phaseSelectBtn');
+    phaseSelectBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const phase = this.getAttribute('data-phase');
+        const projectSelection = document.getElementById('project_selection');
+        const initialProjectIdElem = document.getElementById('initial_project_id');
+        const projectId = (projectSelection && projectSelection.value && projectSelection.value !== 'new') 
+                          ? projectSelection.value 
+                          : (initialProjectIdElem && initialProjectIdElem.value);
+        
+        if (!projectId || projectId === '' || projectId === 'new') {
+          alert('プロジェクトを選択してください。');
+          return;
+        }
+        
+        // ローディング表示
+        const originalText = this.textContent;
+        this.disabled = true;
+        this.textContent = '生成中...';
+        
+        // GASコード表示画面に切り替え
+        gasPhaseSelection.style.display = 'none';
+        gasCodeDisplay.style.display = 'block';
+        gasCodeTextarea.value = `Phase ${phase} のGASコードを生成しています...`;
+        const gasModalTitle = document.getElementById('gasModalTitle');
+        if (gasModalTitle) {
+          gasModalTitle.textContent = `GASコード - Phase ${phase}`;
+        }
+        
+        // GASコードを取得（Phaseを指定）
+        fetch(`/api/project/${projectId}/gas-code/${phase}`)
+          .then(response => {
+            console.log('GASコード取得レスポンス:', response.status, response.statusText);
+            if (!response.ok) {
+              return response.json().then(data => {
+                console.error('HTTPエラー:', data);
+                throw new Error(data.error || `HTTP ${response.status}: ${response.statusText}`);
+              }).catch(err => {
+                // JSON解析に失敗した場合
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+              });
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log('GASコード生成レスポンス:', data);
+            
+            // エラーハンドリング
+            if (data.error) {
+              alert('エラー: ' + data.error);
+              console.error('GASコード生成エラー:', data.error);
+              gasCodeTextarea.value = 'エラー: ' + data.error;
+              btn.disabled = false;
+              btn.textContent = originalText;
+              return;
+            }
+            
+            // gas_codeが存在するか確認
+            if (!data.gas_code || data.gas_code.trim() === '') {
+              alert('エラー: GASコードが生成されませんでした。');
+              console.error('GASコード生成エラー: gas_codeが空です', data);
+              gasCodeTextarea.value = 'エラー: GASコードが生成されませんでした。';
+              btn.disabled = false;
+              btn.textContent = originalText;
+              return;
+            }
+            
+            // GASコードを表示
+            gasCodeTextarea.value = data.gas_code;
+            
+            // ファイル保存情報を表示
+            if (data.gas_file_saved && data.gas_file_path) {
+              const downloadInfo = document.getElementById('gasDownloadInfo');
+              if (downloadInfo) {
+                downloadInfo.innerHTML = `
+                  <div style="margin-top: 10px; padding: 10px; background-color: #d1ecf1; color: #0c5460; border-radius: 4px; border: 1px solid #bee5eb;">
+                    <strong>✓ GASコードを保存しました (Phase ${phase})</strong><br>
+                    <a href="/download/${data.gas_file_path}" style="color: #0c5460; text-decoration: underline;" download="${data.gas_filename}">${data.gas_filename} をダウンロード</a>
+                  </div>
+                `;
+                downloadInfo.style.display = 'block';
+              }
+            } else {
+              const downloadInfo = document.getElementById('gasDownloadInfo');
+              if (downloadInfo) {
+                downloadInfo.style.display = 'none';
+              }
+            }
+            
+            // ボタンの状態をリセット
+            btn.disabled = false;
+            btn.textContent = originalText;
+          })
+          .catch(error => {
+            console.error('Error fetching GAS code:', error);
+            console.error('Error details:', error);
+            alert('GASコードの取得に失敗しました: ' + error.message);
+            gasCodeTextarea.value = 'エラー: ' + error.message;
+            btn.disabled = false;
+            btn.textContent = originalText;
+          });
+      });
+    });
+    
+    // 個人用Phase選択ボタンの処理
+    const individualPhaseSelectBtns = document.querySelectorAll('.individualPhaseSelectBtn');
+    individualPhaseSelectBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const phase = this.getAttribute('data-phase');
+        const projectSelection = document.getElementById('project_selection');
+        const initialProjectIdElem = document.getElementById('initial_project_id');
+        const projectId = (projectSelection && projectSelection.value && projectSelection.value !== 'new') 
+                          ? projectSelection.value 
+                          : (initialProjectIdElem && initialProjectIdElem.value);
+        
+        if (!projectId || projectId === '' || projectId === 'new') {
+          alert('プロジェクトを選択してください。');
+          return;
+        }
+        
+        // ローディング表示
+        const originalText = this.textContent;
+        this.disabled = true;
+        this.textContent = '生成中...';
+        
+        // GASコード表示画面に切り替え
+        gasPhaseSelection.style.display = 'none';
+        gasCodeDisplay.style.display = 'block';
+        gasCodeTextarea.value = `Phase ${phase} の個人用GASコードを生成しています...`;
+        const gasModalTitle = document.getElementById('gasModalTitle');
+        if (gasModalTitle) {
+          gasModalTitle.textContent = `個人用GASコード - Phase ${phase}`;
+        }
+        
+        // 個人用GASコードを取得（Phaseを指定）
+        fetch(`/api/project/${projectId}/individual-gas-code/${phase}`)
+          .then(response => {
+            console.log('個人用GASコード取得レスポンス:', response.status, response.statusText);
+            if (!response.ok) {
+              return response.json().then(data => {
+                console.error('HTTPエラー:', data);
+                throw new Error(data.error || `HTTP ${response.status}: ${response.statusText}`);
+              }).catch(err => {
+                // JSON解析に失敗した場合
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+              });
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log('個人用GASコード生成レスポンス:', data);
+            
+            // エラーハンドリング
+            if (data.error) {
+              alert('エラー: ' + data.error);
+              console.error('個人用GASコード生成エラー:', data.error);
+              gasCodeTextarea.value = 'エラー: ' + data.error;
+              btn.disabled = false;
+              btn.textContent = originalText;
+              return;
+            }
+            
+            // gas_codeが存在するか確認
+            if (!data.gas_code || data.gas_code.trim() === '') {
+              alert('エラー: 個人用GASコードが生成されませんでした。');
+              console.error('個人用GASコード生成エラー: gas_codeが空です', data);
+              gasCodeTextarea.value = 'エラー: 個人用GASコードが生成されませんでした。';
+              btn.disabled = false;
+              btn.textContent = originalText;
+              return;
+            }
+            
+            // GASコードを表示
+            gasCodeTextarea.value = data.gas_code;
+            
+            // ファイル保存情報を表示
+            if (data.gas_file_saved && data.gas_file_path) {
+              const downloadInfo = document.getElementById('gasDownloadInfo');
+              if (downloadInfo) {
+                downloadInfo.innerHTML = `
+                  <div style="margin-top: 10px; padding: 10px; background-color: #d1ecf1; color: #0c5460; border-radius: 4px; border: 1px solid #bee5eb;">
+                    <strong>✓ 個人用GASコードを保存しました (Phase ${phase})</strong><br>
+                    <a href="/download/${data.gas_file_path}" style="color: #0c5460; text-decoration: underline;" download="${data.gas_filename}">${data.gas_filename} をダウンロード</a>
+                  </div>
+                `;
+                downloadInfo.style.display = 'block';
+              }
+            } else {
+              const downloadInfo = document.getElementById('gasDownloadInfo');
+              if (downloadInfo) {
+                downloadInfo.style.display = 'none';
+              }
+            }
+            
+            // ボタンの状態をリセット
+            btn.disabled = false;
+            btn.textContent = originalText;
+          })
+          .catch(error => {
+            console.error('Error fetching individual GAS code:', error);
+            console.error('Error details:', error);
+            alert('個人用GASコードの取得に失敗しました: ' + error.message);
+            gasCodeTextarea.value = 'エラー: ' + error.message;
+            btn.disabled = false;
+            btn.textContent = originalText;
+          });
+      });
+    });
+    
+    // モーダルを閉じる
+    if (closeGasModal) {
+      closeGasModal.addEventListener('click', function() {
+        gasModal.style.display = 'none';
+        copySuccessMsg.style.display = 'none';
+        const downloadInfo = document.getElementById('gasDownloadInfo');
+        if (downloadInfo) {
+          downloadInfo.style.display = 'none';
+        }
+        // Phase選択画面に戻す
+        gasPhaseSelection.style.display = 'block';
+        gasCodeDisplay.style.display = 'none';
+        const gasModalTitle = document.getElementById('gasModalTitle');
+        if (gasModalTitle) {
+          gasModalTitle.textContent = 'GASコード生成';
+        }
+      });
+    }
+    
+    // モーダル外をクリックで閉じる
+    if (gasModal) {
+      gasModal.addEventListener('click', function(e) {
+        if (e.target === gasModal) {
+          gasModal.style.display = 'none';
+          copySuccessMsg.style.display = 'none';
+          const downloadInfo = document.getElementById('gasDownloadInfo');
+          if (downloadInfo) {
+            downloadInfo.style.display = 'none';
+          }
+          // Phase選択画面に戻す
+          gasPhaseSelection.style.display = 'block';
+          gasCodeDisplay.style.display = 'none';
+          const gasModalTitle = document.getElementById('gasModalTitle');
+          if (gasModalTitle) {
+            gasModalTitle.textContent = 'GASコード生成';
+          }
+        }
+      });
+    }
+    
+    // コードをコピー
+    if (copyGasCode) {
+      copyGasCode.addEventListener('click', function() {
+        gasCodeTextarea.select();
+        gasCodeTextarea.setSelectionRange(0, 99999); // モバイル対応
+        
+        try {
+          document.execCommand('copy');
+          copySuccessMsg.style.display = 'block';
+          setTimeout(function() {
+            copySuccessMsg.style.display = 'none';
+          }, 2000);
+        } catch (err) {
+          alert('コピーに失敗しました。手動でコピーしてください。');
+        }
+      });
+    }
+  </script>
+
+  <!-- 参加者照合バナー（27_CSV照合バリデーション要件） -->
+  <div id="validationOverlay">
+    <div id="validationBanner">
+      <h3>⚠️ 参加者の照合結果を確認してください</h3>
+      <div id="validationContent"></div>
+      <div class="val-actions">
+        <button class="val-btn-back" id="valBtnBack">CSVを修正して戻る</button>
+        <button class="val-btn-continue" id="valBtnContinue">このまま続行する</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    const overlay = document.getElementById('validationOverlay');
+    const content = document.getElementById('validationContent');
+    const form    = document.getElementById('uploadForm');
+    let validationPassed = false;  // 続行フラグ
+
+    // CSV_TYPE → 表示ラベルのマッピング
+    const CSV_LABELS = {
+      post:    '直後.csv',
+      follow:  '1ヶ月後.csv',
+      manager: '上長1ヶ月後.csv',
+    };
+
+    // バナーを閉じてフォームをリセット
+    document.getElementById('valBtnBack').addEventListener('click', function () {
+      overlay.classList.remove('active');
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = false;
+      submitBtn.textContent = '分析を実行';
+    });
+
+    // 続行 → 実際にフォームを送信
+    document.getElementById('valBtnContinue').addEventListener('click', function () {
+      overlay.classList.remove('active');
+      validationPassed = true;
+      form.submit();
+    });
+
+    // 照合結果をバナーに描画
+    function renderResults(results) {
+      let html = '';
+      Object.entries(results).forEach(([key, r]) => {
+        const label = CSV_LABELS[key] || key;
+        const refLabel = r.ref_label || '直前フェーズCSV';
+        html += `<div class="val-section"><strong>【 ${label} vs ${refLabel} 】</strong></div>`;
+
+        if (r.matched && r.matched.length) {
+          html += `<div class="val-section val-ok">✅ 正常照合: ${r.matched.length}名</div>`;
+        }
+        if (r.name_mismatch && r.name_mismatch.length) {
+          html += `<div class="val-section val-warn">⚠️ 氏名が一致しない: ${r.name_mismatch.length}名</div>`;
+          html += '<ul class="val-list">';
+          r.name_mismatch.forEach(p => {
+            html += `<li>${p.email}（${p.ref_name} → ${p.name}）</li>`;
+          });
+          html += '</ul>';
+        }
+        if (r.domain_mismatch && r.domain_mismatch.length) {
+          html += `<div class="val-section val-warn">⚠️ ドメイン違い（@前は一致）: ${r.domain_mismatch.length}名</div>`;
+          html += '<ul class="val-list">';
+          r.domain_mismatch.forEach(p => {
+            const fromDomain = p.ref_email.split('@')[1] || '';
+            const toDomain   = p.email.split('@')[1] || '';
+            html += `<li>${p.local}（${fromDomain} → ${toDomain}）</li>`;
+          });
+          html += '</ul>';
+        }
+        if (r.not_in_reference && r.not_in_reference.length) {
+          html += `<div class="val-section val-error">❌ 直前CSVに存在しない: ${r.not_in_reference.length}名</div>`;
+          html += '<ul class="val-list">';
+          r.not_in_reference.forEach(p => {
+            html += `<li>${p.email}（${p.name}）</li>`;
+          });
+          html += '</ul>';
+        }
+        if (r.missing_in_upload && r.missing_in_upload.length) {
+          html += `<div class="val-section val-warn">⚠️ 未回答（直前CSVにいるが今回なし）: ${r.missing_in_upload.length}名</div>`;
+          html += '<ul class="val-list">';
+          r.missing_in_upload.forEach(p => {
+            html += `<li>${p.email}（${p.name}）</li>`;
+          });
+          html += '</ul>';
+        }
+      });
+      content.innerHTML = html;
+    }
+
+    // フォーム送信イベントを横取り
+    form.addEventListener('submit', function (e) {
+      // 続行フラグが立っていれば検証済みなのでそのまま送信
+      if (validationPassed) return;
+
+      const projectId = document.getElementById('project_selection').value;
+      // 新規プロジェクトは既存CSVがないため照合スキップ
+      if (!projectId || projectId === 'new') return;
+
+      // 照合対象ファイルが1つもなければスキップ
+      const postFile    = document.getElementById('post_file').files[0];
+      const followFile  = document.getElementById('follow_file').files[0];
+      const managerFile = document.getElementById('manager_file').files[0];
+      if (!postFile && !followFile && !managerFile) return;
+
+      e.preventDefault();
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = '照合中...';
+
+      const fd = new FormData();
+      fd.append('project_id', projectId);
+      if (postFile)    fd.append('post_file',    postFile);
+      if (followFile)  fd.append('follow_file',  followFile);
+      if (managerFile) fd.append('manager_file', managerFile);
+
+      fetch('/api/validate-participants', { method: 'POST', body: fd })
+        .then(res => res.json())
+        .then(data => {
+          if (data.has_issues) {
+            renderResults(data.results);
+            overlay.classList.add('active');
+            submitBtn.disabled = false;
+            submitBtn.textContent = '分析を実行';
+          } else {
+            // 問題なし → そのまま送信
+            validationPassed = true;
+            form.submit();
+          }
+        })
+        .catch(() => {
+          // 照合エラーの場合は警告せずそのまま送信
+          validationPassed = true;
+          form.submit();
+        });
+    });
+  })();
+  </script>
+</body>
+</html>

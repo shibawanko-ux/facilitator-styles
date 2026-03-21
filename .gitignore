@@ -1,32 +1,65 @@
-# Logs
-logs
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Node.js
+node_modules/
+node_modules
+dist
+dist-ssr
+*.local
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+.DS_Store
 
-node_modules
-dist
-dist-ssr
-*.local
+# 環境・秘密情報
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+
+# アップロードデータ・生成レポート・ログ（個人情報含む）
+Project/app_skill_Analysis/projects/*/uploads/
+Project/app_skill_Analysis/projects/*/reports/
+Project/app_skill_Analysis/projects/*/spreadsheet_export/
+Project/app_skill_Analysis/projects/*/logs/
+Project/app_Client_workshop_report/projects/*/uploads/
+Project/app_Client_workshop_report/projects/*/output/
+
+# ビルド成果物
+Project/app_Facilitator_reflection/dist/
+Project/app_Facilitator_type_diagnosis/dist/
+
+# macOS
+.DS_Store
+Thumbs.db
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 
-# Environment variables
-.env
-.env.local
-.env.*.local
-
 # Vercel
 .vercel
+
+# Claude Code キャッシュ
+.claude/cache/
+
+# 大容量PDFサンプル（GitHub 100MB制限超過）
+Project/app_Client_workshop_report/docs/samples/*.key.pdf
