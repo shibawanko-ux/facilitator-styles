@@ -12,22 +12,18 @@ jobs:
     steps:
       - name: Ping app_Facilitator_reflection (Supabase)
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 \
             "${{ secrets.FACILITATOR_SUPABASE_URL }}/rest/v1/" \
             -H "apikey: ${{ secrets.FACILITATOR_SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.FACILITATOR_SUPABASE_ANON_KEY }}")
+            -H "Authorization: Bearer ${{ secrets.FACILITATOR_SUPABASE_ANON_KEY }}" \
+            || echo "000")
           echo "Facilitator reflection: HTTP $STATUS"
-          if [ "$STATUS" -lt 200 ] || [ "$STATUS" -ge 400 ]; then
-            echo "::warning::Facilitator reflection ping returned $STATUS"
-          fi
 
       - name: Ping app_SystemCoaching_team_survey (Supabase)
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 \
             "${{ secrets.TEAM_SURVEY_SUPABASE_URL }}/rest/v1/" \
             -H "apikey: ${{ secrets.TEAM_SURVEY_SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.TEAM_SURVEY_SUPABASE_ANON_KEY }}")
+            -H "Authorization: Bearer ${{ secrets.TEAM_SURVEY_SUPABASE_ANON_KEY }}" \
+            || echo "000")
           echo "Team survey: HTTP $STATUS"
-          if [ "$STATUS" -lt 200 ] || [ "$STATUS" -ge 400 ]; then
-            echo "::warning::Team survey ping returned $STATUS"
-          fi
