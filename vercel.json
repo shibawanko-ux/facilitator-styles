@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd 'Project/app_Facilitator_type_diagnosis' && npm install && npm run build",
+  "outputDirectory": "Project/app_Facilitator_type_diagnosis/dist",
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+}
