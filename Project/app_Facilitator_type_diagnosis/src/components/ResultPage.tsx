@@ -35,31 +35,25 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
       <div className="flex-1 flex flex-col max-w-3xl w-full mx-auto py-12 px-6">
-        {/* ヘッダー：ロゴ（TOP・質問画面と統一・次の要素との隙間は控えめ） */}
-        <section className="text-center mb-4" aria-label="結果のヘッダー">
-          <div className="mb-2">
-            <img
-              src="/logo.png"
-              alt="awareness=design"
-              className="h-8 md:h-10 mx-auto object-contain"
-            />
-          </div>
-        </section>
         {/* 結果カード（ヒーロー・詳細・傾向キーワード・得意な場面） */}
-        <section className="bg-white rounded-2xl shadow-sm border border-slate-200 mb-8" aria-label="診断結果">
-          {/* ヒーローセクション：タイプ概要 */}
-          <div className="card mb-0 animate-fade-in">
-          {/* ヘッダー */}
-          <div className="bg-slate-600 -mx-8 -mt-8 px-8 py-10 mb-8 rounded-t-2xl text-white text-center">
-            <p className="text-sm text-slate-200 mb-2">あなたのファシリテータースタイルは...</p>
+        <section className="bg-white rounded-2xl shadow-sm border border-slate-200 mb-8 overflow-hidden animate-fade-in" aria-label="診断結果">
+          {/* 上段：キャラクターイラスト（全幅） */}
+          <img
+            src={result.type.illustration ?? '/hero_illustration.png'}
+            alt={result.type.name}
+            className="w-full block"
+          />
+          {/* 下段：テキストエリア */}
+          <div className="px-8 py-10 text-white text-center bg-sky-600">
+            <p className="text-sm mb-2 text-sky-300 opacity-90">あなたのファシリテータースタイルは...</p>
             <h1 className="text-3xl md:text-4xl font-bold mb-3">
               {result.type.name}
             </h1>
-            <div className="text-lg text-white font-normal">
+            <div className="text-lg text-sky-100 font-normal mb-4">
               {result.type.catchcopy.replace(/\*\*/g, '')}
             </div>
             {/* 4軸タグ（1-A）：角Rのピル型チップで何型かが一目で分かる */}
-            <div className="mt-4 flex flex-wrap justify-center gap-2">
+            <div className="flex flex-wrap justify-center gap-2">
               {[
                 result.tendencies.intervention.label,
                 result.tendencies.perception.label,
@@ -68,14 +62,14 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
               ].map((label) => (
                 <span
                   key={label}
-                  className="inline-block px-4 py-2 rounded-full text-sm font-medium bg-slate-100 text-slate-700"
+                  className="inline-block px-4 py-2 rounded-full text-sm font-medium text-white bg-white/20"
                 >
                   {label}
                 </span>
               ))}
             </div>
           </div>
-          
+          <div className="p-8">
           {/* タイプの詳細説明（複数段落・太字対応） */}
           <div className="space-y-4 mb-8">
             {result.type.detailedDescription.map((paragraph, index) => (
@@ -206,14 +200,14 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
               ))}
             </div>
           </div>
-        </div>
+          </div>
         </section>
 
         {/* ファシリテーター特性セクション：4軸のスコア */}
         <div className="card mb-10 animate-fade-in-up">
           <div className="flex items-center gap-4 mb-8">
-            <div className="icon-square bg-slate-100">
-              <svg className="w-5 h-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="icon-square bg-sky-100">
+              <svg className="w-5 h-5 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
@@ -411,13 +405,26 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
           <ShareSection result={result} />
         </section>
 
-        {/* awareness=design 導線カード（TOP と同内容・シェアとの隙間は他セクション同様 mb-10 のみ） */}
-        <div className="w-full no-print">
+        {/* トップに戻る（トップ画面へ遷移） */}
+        <div className="text-center mt-2 mb-12 no-print">
+          <button
+            type="button"
+            onClick={onRestart}
+            className="btn-primary text-lg font-bold py-5 px-10"
+          >
+            トップに戻る
+          </button>
+        </div>
+      </div>
+
+      {/* awareness=design ブランド導線セクション（TOP と統一・全幅） */}
+      <section className="px-6 py-12 bg-[#e0f2fe] no-print" aria-label="提供元について">
+        <div className="max-w-3xl mx-auto">
           <a
             href="https://awareness-design.studio.site/"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full flex flex-col sm:flex-row items-stretch sm:items-center gap-4 p-5 rounded-2xl border border-slate-200 bg-white shadow-sm hover:border-slate-300 hover:shadow-md transition-all duration-300 text-left no-underline focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+            className="w-full flex flex-col sm:flex-row items-stretch sm:items-center gap-4 p-5 rounded-2xl border border-sky-200 bg-white shadow-sm hover:border-sky-300 hover:shadow-md transition-all duration-300 text-left no-underline focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
             aria-label="awareness=design のサイトへ"
           >
             <div className="min-w-0 flex-1">
@@ -436,20 +443,10 @@ export function ResultPage({ result, onRestart }: ResultPageProps) {
             </div>
           </a>
         </div>
-
-        {/* トップに戻る（トップ画面へ遷移） */}
-        <div className="text-center mt-10 no-print">
-          <button
-            onClick={onRestart}
-            className="btn-primary text-lg font-bold py-5 px-10"
-          >
-            トップに戻る
-          </button>
-        </div>
-      </div>
+      </section>
 
       {/* フッター（TOP・Question と統一・全幅） */}
-      <footer className="mt-auto px-6 py-10 text-center bg-white border-t border-slate-200 no-print">
+      <footer className="mt-auto px-6 py-10 text-center bg-[#e0f2fe] border-t border-sky-200 no-print">
         <a
           href="https://awareness-design.studio.site/"
           target="_blank"

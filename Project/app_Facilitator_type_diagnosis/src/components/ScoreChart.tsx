@@ -63,7 +63,10 @@ function AxisBar({ axisName, score, leftLabel, rightLabel, tendency, colorClass 
       {/* 1. スコアバーを上に（添付画像準拠：バー→タイトル→リード文） */}
       <div className="relative mb-2">
         <div className="h-2.5 rounded-full bg-slate-200 border border-slate-100 w-full relative">
-          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-slate-300 z-10 -translate-x-px" />
+          {/* 中央縦線：文字と分離して正確に50%に配置 */}
+          <div className="absolute left-[calc(50%-0.5px)] z-10 -top-1.5">
+            <div className="w-px h-5 bg-slate-400" />
+          </div>
           <div
             className={`absolute top-1/2 -translate-y-1/2 w-5 h-5 rounded-full ${colors.fill} z-20 border-2 border-white shadow transition-all duration-500`}
             style={{ left: `calc(${percentage}% - 10px)` }}

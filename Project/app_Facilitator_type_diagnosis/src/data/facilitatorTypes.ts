@@ -4,6 +4,7 @@ export const facilitatorTypes: FacilitatorType[] = [
   // 触発型ベース（8タイプ）
   {
     id: 'conductor',
+    illustration: '/illus_conductor.png',
     name: '場の指揮者',
     catchcopy: '**計画的**に場を**リード**、**ゴール**に導く',
     description: '緻密な計画と明確なゴール設定で、参加者を力強く導くファシリテーター。発言を丁寧に拾いながら、時間内に確実に成果を出します。オーケストラの指揮者のように、全体を見渡しながら場をコントロールする力があります。',
@@ -25,6 +26,7 @@ export const facilitatorTypes: FacilitatorType[] = [
   },
   {
     id: 'engine',
+    illustration: '/illus_engine.png',
     name: '推進のエンジン',
     catchcopy: '**事実**を見ながら**柔軟**に**ゴール**へ加速',
     description: 'ゴールに向かって場を推進しながらも、参加者の発言や状況に応じて柔軟に対応できるファシリテーター。具体的な事実を拾いつつ、その場の流れで最適なルートを選びます。推進力と適応力を兼ね備えた、頼れるエンジンのような存在です。',
@@ -46,6 +48,7 @@ export const facilitatorTypes: FacilitatorType[] = [
   },
   {
     id: 'tuner',
+    illustration: '/illus_tuner.png',
     name: '場の調律師',
     catchcopy: '**人**と**事実**を**丁寧**につなげる',
     description: '参加者一人ひとりの発言を丁寧に拾いながら、関係性を育てる場を設計するファシリテーター。計画的に進めつつも、参加者の声を大切にします。楽器の調律師のように、場のハーモニーを整える力があります。',
@@ -67,6 +70,7 @@ export const facilitatorTypes: FacilitatorType[] = [
   },
   {
     id: 'spark',
+    illustration: '/illus_spark.png',
     name: '共感のスパーク',
     catchcopy: 'その場の**声**を拾って**火**をつける',
     description: '参加者の発言をキャッチして、その場で共感を広げるファシリテーター。計画に縛られず、参加者の声から生まれるエネルギーを場に還元します。スパークのように、小さな声から大きな共感の輪を広げる力があります。',
@@ -88,6 +92,7 @@ export const facilitatorTypes: FacilitatorType[] = [
   },
   {
     id: 'navigator',
+    illustration: '/illus_navigator.png',
     name: '戦略のナビゲーター',
     catchcopy: '**先を読んで**道筋を示す',
     description: '場の空気を読みながら、ゴールへの最適な道筋を設計するファシリテーター。参加者の感情や場の流れを察知し、戦略的に場を導きます。ナビゲーターのように、目的地まで確実に案内する力があります。',
@@ -109,6 +114,7 @@ export const facilitatorTypes: FacilitatorType[] = [
   },
   {
     id: 'pioneer',
+    illustration: '/illus_pioneer.png',
     name: '直感の開拓者',
     catchcopy: '**空気を読んで**新しい**道**を切り拓く',
     description: '直感で場の空気を読み取り、ゴールに向けて新しい道を切り拓くファシリテーター。予定調和を嫌い、その場のひらめきでブレークスルーを起こします。開拓者のように、未知の領域に踏み込む勇気があります。',
@@ -130,6 +136,7 @@ export const facilitatorTypes: FacilitatorType[] = [
   },
   {
     id: 'director',
+    illustration: '/illus_director.png',
     name: '場の演出家',
     catchcopy: '**感情**と**流れ**を設計して盛り上げる',
     description: '参加者の感情の流れを読み、場を演出するファシリテーター。事前に感情の山場を設計し、参加者が自然と盛り上がる仕掛けを作ります。演出家のように、感動を生み出す場を創り上げる力があります。',
@@ -151,6 +158,7 @@ export const facilitatorTypes: FacilitatorType[] = [
   },
   {
     id: 'moodmaker',
+    illustration: '/illus_moodmaker.png',
     name: 'ムードメーカー',
     catchcopy: '**空気を読んで**場に**火**を灯す',
     description: '場の空気を瞬時に読み取り、参加者の感情に寄り添いながら場を盛り上げるファシリテーター。計画よりも「今この瞬間」を大切にし、その場のエネルギーを最大化します。太陽のように、周りを明るく照らす存在です。',
@@ -174,6 +182,7 @@ export const facilitatorTypes: FacilitatorType[] = [
   // 見守型ベース（8タイプ）
   {
     id: 'helmsman',
+    illustration: '/illus_helmsman.png',
     name: '静かな舵取り',
     catchcopy: '**淡々**と**事実**を積み上げ**ゴール**へ',
     description: '表に出ずとも、着実にゴールへ導くファシリテーター。発言を正確に記録し、計画通りに進行します。派手さはないが、確実な舵取りで船を目的地に届ける、信頼感のある存在です。',
@@ -195,6 +204,7 @@ export const facilitatorTypes: FacilitatorType[] = [
   },
   {
     id: 'recorder',
+    illustration: '/illus_recorder.png',
     name: '柔軟な記録者',
     catchcopy: '**発言**を拾いながら**軌道修正**',
     description: '参加者の発言を丁寧に拾いながら、ゴールに向けて柔軟に軌道修正するファシリテーター。記録と進行を両立させ、参加者の声を成果につなげます。書記のように場を支えつつ、適切に方向を調整する力があります。',
@@ -216,6 +226,7 @@ export const facilitatorTypes: FacilitatorType[] = [
   },
   {
     id: 'foundation',
+    illustration: '/illus_foundation.png',
     name: '信頼の土台',
     catchcopy: '**安心感**を作り、**関係**を育てる',
     description: '参加者が安心して発言できる土台を作るファシリテーター。一人ひとりの発言を大切に記録し、丁寧に関係性を育てます。大地のように、揺るがない安心感を提供する存在です。',
@@ -237,6 +248,7 @@ export const facilitatorTypes: FacilitatorType[] = [
   },
   {
     id: 'listener',
+    illustration: '/illus_listener.png',
     name: '寄り添う聴き手',
     catchcopy: '**声**を拾い、場に**安心**を与える',
     description: '参加者の声に寄り添い、安心感を与えるファシリテーター。計画よりも参加者の状態を優先し、柔軟に対応します。傾聴のプロとして、参加者が「話してよかった」と思える場を作ります。',
@@ -258,6 +270,7 @@ export const facilitatorTypes: FacilitatorType[] = [
   },
   {
     id: 'strategist',
+    illustration: '/illus_strategist.png',
     name: '静かな戦略家',
     catchcopy: '**先を見据えて**裏から支える',
     description: '場の空気を読みながら、裏方としてゴールを達成するファシリテーター。表に出ずとも、戦略的に場を設計し、参加者を目的地に導きます。参謀のように、見えないところで場を支える知恵者です。',
@@ -279,6 +292,7 @@ export const facilitatorTypes: FacilitatorType[] = [
   },
   {
     id: 'compass',
+    illustration: '/illus_compass.png',
     name: '流れを読む羅針盤',
     catchcopy: '**空気を読み**つつ**柔軟**に導く',
     description: '場の流れを読み、最適なタイミングでゴールへ導くファシリテーター。表に出ずとも、羅針盤のように常に方向を示します。参加者が自然と目的地に向かうよう、さりげなく場を調整する力があります。',
@@ -300,6 +314,7 @@ export const facilitatorTypes: FacilitatorType[] = [
   },
   {
     id: 'guardian',
+    illustration: '/illus_guardian.png',
     name: '場の守り人',
     catchcopy: '**深い洞察**で**関係性**を守る',
     description: '参加者の感情や関係性を深く理解し、それを守るファシリテーター。丁寧に場を設計し、誰もが傷つかない安全な空間を作ります。守り人のように、場の秩序と関係性を守る番人です。',
@@ -321,6 +336,7 @@ export const facilitatorTypes: FacilitatorType[] = [
   },
   {
     id: 'resonator',
+    illustration: '/illus_resonator.png',
     name: '静かな共鳴者',
     catchcopy: '**空気を感じ**、**寄り添う**存在',
     description: '場の空気に静かに共鳴し、参加者に寄り添うファシリテーター。言葉少なでも、その存在感が参加者に安心感を与えます。共鳴する音叉のように、場のエネルギーを受け止め、増幅させる力があります。',

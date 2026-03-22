@@ -38,6 +38,7 @@ export interface Tendency {
 export interface FacilitatorType {
   id: string;
   name: string;
+  illustration?: string;
   catchcopy: string;
   description: string;
   detailedDescription: string[]; // 複数段落の詳細説明

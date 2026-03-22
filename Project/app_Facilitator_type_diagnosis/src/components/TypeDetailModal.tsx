@@ -76,23 +76,30 @@ export function TypeDetailModal({ type, onClose }: TypeDetailModalProps) {
         className="relative bg-white rounded-2xl border border-slate-200 shadow-lg max-h-[90vh] w-full max-w-2xl overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* 白い余白（モーダル最上部）＋閉じるボタンを右上に配置 */}
-        <div className="flex shrink-0 items-start justify-end bg-white rounded-t-2xl pr-2 pt-2 min-h-[3rem]">
-          <button
-            type="button"
-            onClick={onClose}
-            className="p-2 rounded-full text-slate-700 hover:bg-slate-200 hover:text-slate-900 transition-colors"
-            aria-label="閉じる"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+        {/* キャラクターイラスト（上部全幅） */}
+        <div className="overflow-hidden rounded-t-2xl">
+          <img
+            src={type.illustration ?? '/hero_illustration.png'}
+            alt={type.name}
+            className="w-full block"
+          />
         </div>
 
+        {/* 閉じるボタン（イラスト上に重ねて配置） */}
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute top-3 right-3 p-2 rounded-full bg-white/80 backdrop-blur-sm text-slate-700 hover:bg-white hover:text-slate-900 transition-colors z-10"
+          aria-label="閉じる"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
         <div className="px-6 pb-8">
-          {/* ヒーロー（結果ページと同様にグレー slate-600 で統一） */}
-          <div className="bg-slate-600 rounded-t-2xl px-6 pt-8 pb-8 mb-6 text-white text-center">
+          {/* ヒーロー（結果ページと統一・sky-600） */}
+          <div className="bg-sky-600 -mx-6 px-6 pt-6 pb-8 mb-6 text-white text-center">
             <h2 id="type-detail-title" className="text-2xl md:text-3xl font-bold mb-3 mt-0">
               {type.name}
             </h2>
@@ -183,6 +190,22 @@ export function TypeDetailModal({ type, onClose }: TypeDetailModalProps) {
             </div>
           </div>
 
+          {/* 得意な場面 */}
+          {type.goodScenes && type.goodScenes.length > 0 && (
+            <div className="pt-4 border-t border-slate-100">
+              <h3 className="text-sm font-semibold text-slate-700 mb-3">得意な場面</h3>
+              <div className="flex flex-wrap gap-2">
+                {type.goodScenes.map((scene, index) => (
+                  <span
+                    key={index}
+                    className="px-4 py-2 bg-slate-50 text-slate-600 rounded-full text-sm border border-slate-100"
+                  >
+                    {scene}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

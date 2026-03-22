@@ -35,10 +35,10 @@ export function QuestionPage({
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50">
+    <div className="min-h-screen flex flex-col bg-[#f8fafc]">
       {/* ヘッダー・プログレス（Q-PROGRESS-01: sticky で常時視認可能） */}
       <section
-        className="sticky top-0 z-10 px-6 pt-8 pb-4 bg-white border-b border-slate-200 shadow-sm"
+        className="sticky top-0 z-10 px-6 pt-8 pb-4 bg-white border-b border-sky-100 shadow-sm"
         aria-label="進捗"
       >
         <div className="max-w-2xl w-full mx-auto">
